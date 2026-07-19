@@ -260,51 +260,6 @@ h1, h2, h3, h4 {
   border-color: rgba(255, 255, 255, 0.4);
 }
 
-.neu-pill-btn-small {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(227, 38, 54, 0.15);
-  border: 1px solid var(--red-signal);
-  color: var(--text-primary);
-  padding: 0.5rem 1.2rem;
-  border-radius: var(--radius-pill);
-  font-size: 0.82rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: var(--transition);
-  box-shadow: 0 0 15px rgba(227, 38, 54, 0.3);
-}
-
-.neu-pill-btn-small:hover {
-  background: var(--red-signal);
-  box-shadow: 0 0 25px rgba(227, 38, 54, 0.7);
-  transform: translateY(-2px);
-}
-
-.neu-pill-btn-outline {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
-  color: var(--text-primary);
-  padding: 0.85rem 2rem;
-  border-radius: var(--radius-pill);
-  font-size: 0.95rem;
-  font-weight: 500;
-  text-decoration: none;
-  transition: var(--transition);
-}
-
-.neu-pill-btn-outline:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: var(--red-signal);
-  box-shadow: 0 0 20px rgba(227, 38, 54, 0.3);
-  transform: translateY(-2px);
-}
-
 /* 5. Full-Viewport Hero Glass Card */
 .hero-section {
   min-height: 100vh;
@@ -682,10 +637,18 @@ h1, h2, h3, h4 {
   box-shadow: 0 0 40px rgba(227, 38, 54, 0.2);
 }
 
+/* Precise Clickable Download Icon Link */
+.apk-icon-glow-link {
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+}
+
 .apk-icon-glow {
-  width: 80px;
-  height: 80px;
-  border-radius: 22px;
+  width: 84px;
+  height: 84px;
+  border-radius: 24px;
   background: linear-gradient(135deg, var(--red-vibrant), var(--red-crimson));
   display: flex;
   align-items: center;
@@ -693,6 +656,18 @@ h1, h2, h3, h4 {
   margin: 0 auto 1.25rem auto;
   box-shadow: 0 0 30px var(--red-signal);
   color: #FFF;
+  transition: var(--transition);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+}
+
+.apk-icon-glow-link:hover .apk-icon-glow {
+  transform: scale(1.08) translateY(-4px);
+  box-shadow: 0 0 45px var(--red-signal), 0 0 15px rgba(255, 255, 255, 0.6);
+  border-color: #FFF;
+}
+
+.apk-icon-glow-link:active .apk-icon-glow {
+  transform: scale(0.96);
 }
 
 .hash-copy-box {
@@ -704,7 +679,7 @@ h1, h2, h3, h4 {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   font-family: var(--font-mono);
   font-size: 0.78rem;
   color: var(--text-secondary);
