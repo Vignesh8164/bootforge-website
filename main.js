@@ -25,11 +25,11 @@ function initGSAPAnimations() {
       delay: 0.2
     });
 
-    gsap.from('.hero-body, .neu-pill-btn', {
+    gsap.from('.hero-body, .neu-pill-btn, .neu-pill-btn-outline', {
       duration: 1,
       y: 30,
       opacity: 0,
-      stagger: 0.2,
+      stagger: 0.15,
       ease: 'power3.out',
       delay: 0.5
     });
@@ -70,6 +70,18 @@ function initGSAPAnimations() {
         delay: index * 0.15,
         ease: 'power2.out'
       });
+    });
+
+    // APK Download Panel Entrance
+    gsap.from('.apk-download-panel', {
+      scrollTrigger: {
+        trigger: '.apk-download-panel',
+        start: 'top 85%'
+      },
+      duration: 1,
+      y: 40,
+      opacity: 0,
+      ease: 'power3.out'
     });
   }
 }
@@ -276,5 +288,28 @@ function initPayPalCheckout() {
       btn.style.opacity = '1';
       btn.innerHTML = origText;
     }, 800);
+  });
+}
+
+/* 6. One-Click Copy SHA-256 Checksum Helper */
+function copySHA256Hash() {
+  const hashText = "7C14C3257BD92DADB99A0DEB46C681C27FE355632B84997EAA22E964519F6DEA";
+  const btn = document.getElementById('copy-hash-btn');
+  
+  navigator.clipboard.writeText(hashText).then(() => {
+    if (btn) {
+      const origText = btn.innerText;
+      btn.innerText = "✓ Copied!";
+      btn.style.background = "#10B981";
+      btn.style.borderColor = "#10B981";
+      
+      setTimeout(() => {
+        btn.innerText = origText;
+        btn.style.background = "";
+        btn.style.borderColor = "";
+      }, 2000);
+    }
+  }).catch(err => {
+    console.error('Failed to copy hash: ', err);
   });
 }
