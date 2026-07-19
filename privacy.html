@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — BootForge Engine</title>
+  <meta name="description" content="BootForge Privacy Policy. Strict local-first architecture, zero tracking, zero personal data collection. Created by Vignesh Guruswamy.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Crimson Red Ambient Gradient Orbs Background -->
+  <div class="orb-container">
+    <div class="red-blob red-blob-1"></div>
+    <div class="red-blob red-blob-2"></div>
+    <div class="red-blob red-blob-3"></div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="navbar-wrapper">
+    <nav class="glass-nav">
+      <a href="index.html" class="brand">
+        <span class="brand-icon-neu">BF</span>
+        <span>BootForge</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="index.html#sequence">Boot Sequence</a></li>
+        <li><a href="index.html#platform">Platform</a></li>
+        <li><a href="index.html#creator">Creator</a></li>
+        <li><a href="index.html#pricing">Pricing</a></li>
+      </ul>
+
+      <a href="index.html" class="neu-pill-btn" style="padding: 0.6rem 1.4rem; font-size: 0.85rem;">← Back to Main Page</a>
+    </nav>
+  </div>
+
+  <main class="container" style="padding-top: 10rem; padding-bottom: 6rem;">
+    <div style="background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: var(--radius-panel); padding: 4rem 3.5rem; box-shadow: 0 35px 80px rgba(0,0,0,0.8); max-width: 900px; margin: 0 auto;">
+      
+      <div class="eyebrow-stacked" style="margin-bottom: 0.75rem;">
+        <span class="word-bold">LEGAL &</span>
+        <span class="word-light">PRIVACY</span>
+      </div>
+
+      <h1 style="font-size: 2.8rem; font-weight: 800; color: #FFF; margin-bottom: 0.5rem;">Privacy Policy</h1>
+      <p style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--red-signal); margin-bottom: 2.5rem;">Effective Date: July 2026 • Version 2.4</p>
+
+      <div style="color: var(--text-secondary); font-weight: 300; font-size: 0.98rem; line-height: 1.8; display: flex; flex-direction: column; gap: 2rem;">
+        
+        <section>
+          <h3 style="color: #FFF; font-size: 1.35rem; font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span style="color: var(--red-signal);">01.</span> Local-First Data Philosophy
+          </h3>
+          <p>
+            BootForge is engineered with a strict <strong>Local-First and Zero-Telemetry</strong> policy. All operating system ISO parsing, dual-partition table creation (FAT32 + exFAT), file streaming, and raw SCSI block sector writing occur 100% locally on your Android device. Your ISO images, personal files, and drive contents never leave your device.
+          </p>
+        </section>
+
+        <section>
+          <h3 style="color: #FFF; font-size: 1.35rem; font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span style="color: var(--red-signal);">02.</span> Android Permissions & Hardware Access
+          </h3>
+          <p>
+            BootForge requests specific Android system permissions strictly necessary for low-level USB Host operations:
+          </p>
+          <ul style="list-style: none; margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.6rem;">
+            <li style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 0.75rem 1rem; border-radius: 12px;">
+              <strong style="color: #FFF;">USB Host Permission (`android.permission.USB_PERMISSION`)</strong> — Used exclusively to claim the connected OTG flash drive interface via userspace SCSI (`libusb`). BootForge does NOT access private app storage, photos, or contacts.
+            </li>
+            <li style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 0.75rem 1rem; border-radius: 12px;">
+              <strong style="color: #FFF;">Storage Read Access</strong> — Used solely to allow you to select your desired operating system ISO file (e.g. Windows 11, Ubuntu) from your phone's storage.
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h3 style="color: #FFF; font-size: 1.35rem; font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span style="color: var(--red-signal);">03.</span> Payments & Transaction Security
+          </h3>
+          <p>
+            BootForge Pro license transactions ($2.00 USD) are processed directly and securely through <strong>PayPal</strong> via 256-bit SSL encrypted connections. BootForge does not collect, handle, or store credit card numbers, bank details, or PayPal passwords. PayPal provides transaction verification to activate your lifetime APK license.
+          </p>
+        </section>
+
+        <section>
+          <h3 style="color: #FFF; font-size: 1.35rem; font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span style="color: var(--red-signal);">04.</span> Zero Third-Party Analytics or Spying
+          </h3>
+          <p>
+            BootForge contains no third-party advertising SDKs, no behavioral trackers, and no background analytics engines. Kernel logs and write speed metrics displayed in the app are strictly runtime telemetry kept in RAM during active sessions.
+          </p>
+        </section>
+
+        <section>
+          <h3 style="color: #FFF; font-size: 1.35rem; font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span style="color: var(--red-signal);">05.</span> Developer Contact & Support
+          </h3>
+          <p>
+            BootForge is created and maintained by <strong>Vignesh Guruswamy</strong> (AI Engineer, India). If you have questions regarding data security or technical support, contact the architect via GitHub at <a href="https://github.com/vignesh8164" target="_blank" style="color: var(--red-signal); text-decoration: underline;">@vignesh8164</a>.
+          </p>
+        </section>
+
+      </div>
+
+      <div style="margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">© 2026 BootForge Systems Inc. Built by Vignesh Guruswamy.</span>
+        <a href="index.html" class="neu-pill-btn" style="padding: 0.6rem 1.4rem; font-size: 0.85rem;">Return Home</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

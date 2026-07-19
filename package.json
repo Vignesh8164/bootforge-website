@@ -1,0 +1,19 @@
+{
+  "name": "bootforge-web",
+  "version": "2.4.0",
+  "description": "BootForge — Redefining Bootable USB Creation from Android",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "echo 'Build step complete: Static files ready for deployment'"
+  },
+  "keywords": [
+    "bootforge",
+    "android",
+    "otg",
+    "bootable-usb",
+    "windows11-iso"
+  ],
+  "author": "Vignesh Guruswamy",
+  "license": "UNLICENSED"
+}
