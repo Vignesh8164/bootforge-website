@@ -346,15 +346,29 @@ function initPayPalCheckout() {
   const mintedKeyEl = document.getElementById('minted-license-key');
   const copyKeyBtn = document.getElementById('copy-license-key-btn');
 
-  if (!buyBtn || !emailModal) return;
+  const errorBox = document.getElementById('modal-error-box');
+  const errorText = document.getElementById('modal-error-text');
+
+  function showModalError(msg) {
+    if (errorBox && errorText) {
+      errorText.innerText = msg;
+      errorBox.style.display = 'block';
+    }
+  }
+
+  function hideModalError() {
+    if (errorBox) errorBox.style.display = 'none';
+  }
 
   function openEmailModal() {
+    hideModalError();
     emailModal.classList.add('open');
     emailModal.setAttribute('aria-hidden', 'false');
     if (buyerEmailInput) buyerEmailInput.focus();
   }
 
   function closeEmailModal() {
+    hideModalError();
     emailModal.classList.remove('open');
     emailModal.setAttribute('aria-hidden', 'true');
   }
@@ -388,6 +402,7 @@ function initPayPalCheckout() {
   if (emailForm) {
     emailForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      hideModalError();
       const emailVal = buyerEmailInput ? buyerEmailInput.value.trim() : '';
       if (!emailVal) return;
 
@@ -430,9 +445,12 @@ function initPayPalCheckout() {
         }, 2500);
 
       } catch (err) {
-        alert(err.message || 'PayPal Checkout failed. Please try again.');
         submitBtn.disabled = false;
         submitBtn.innerHTML = origBtnHtml;
+        const msg = err.message === 'Failed to fetch' 
+          ? 'Licensing server connection failed (CORS or network error). Please ensure bootforge.me is registered in Appwrite platforms.' 
+          : (err.message || 'PayPal Checkout failed. Please try again.');
+        showModalError(msg);
       }
     });
   }
