@@ -536,36 +536,39 @@ async function handle({ req, res, log, error }) {
 
     const licenseFields = {
       userId,
-      email,
+      email: email || '',
       licenseKeyHash: hashLicenseKey(licenseKey),
       keyLast4: licenseKey.slice(-4),
-      // Stored encrypted-at-rest (server-only access via API key) so a later
-      // retry or "Resend Email" can actually re-send the real key instead of
-      // silently no-oping against an irreversible hash.
-      licenseKey,
       emailSent: false,
       paymentId: captureId,
       purchaseDate: nowIso,
       pricePaid: price,
       status: 'ISSUED',
-      deviceFingerprint: null,
-      manufacturer: null,
-      model: null,
-      androidVersion: null,
-      activationDate: null,
       suspended: false,
     };
     try {
       await db.getDocument(DB, LICENSES, userId);
       await db.updateDocument(DB, LICENSES, userId, licenseFields);
-    } catch {
-      await db.createDocument(DB, LICENSES, userId, licenseFields);
+    } catch (e) {
+      log(`updateDocument failed (${e?.message}) — attempting createDocument`);
+      try {
+        await db.createDocument(DB, LICENSES, userId, licenseFields);
+      } catch (createErr) {
+        log(`createDocument with full fields failed (${createErr?.message}) — falling back to core schema fields`);
+        await db.createDocument(DB, LICENSES, userId, {
+          userId,
+          email: email || '',
+          licenseKeyHash: hashLicenseKey(licenseKey),
+          keyLast4: licenseKey.slice(-4),
+          status: 'ISSUED',
+        });
+      }
     }
   } catch (e) {
-    error(`post-capture persistence failed for order ${orderId}: ${e.message}`);
+    error(`post-capture persistence failed for order ${orderId}: ${e?.message || e}`);
     return res.json({
       ok: false,
-      error: `Payment was received but the license could not be saved (${e.message}). Please retry — you will not be charged again.`,
+      error: `Payment was received but the license could not be saved (${e?.message || e}). Please retry — you will not be charged again.`,
     });
   }
 
