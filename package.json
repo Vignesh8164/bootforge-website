@@ -1,11 +1,16 @@
 {
   "name": "bootforge-web",
   "version": "2.4.0",
+  "type": "module",
   "description": "BootForge — Redefining Bootable USB Creation from Android",
-  "main": "server.js",
+  "main": "src/main.js",
   "scripts": {
     "start": "node server.js",
     "build": "echo 'Build step complete: Static files ready for deployment'"
+  },
+  "dependencies": {
+    "node-appwrite": "^14.1.0",
+    "pdfkit": "^0.15.0"
   },
   "keywords": [
     "bootforge",
