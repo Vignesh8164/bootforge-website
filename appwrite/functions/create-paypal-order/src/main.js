@@ -53,8 +53,7 @@ export default async (ctx) => {
 };
 
 async function handle({ req, res, log, error }) {
-  const userId = req.headers['x-appwrite-user-id'];
-  if (!userId) return res.json({ ok: false, error: 'Not signed in.' }, 401);
+  const userId = req.headers['x-appwrite-user-id'] || ('web_anon_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7));
 
   const client = new Client()
     .setEndpoint(process.env.APPWRITE_FUNCTION_API_ENDPOINT)
@@ -68,13 +67,16 @@ async function handle({ req, res, log, error }) {
   const returnUrl = payload.returnUrl || RETURN_URL;
   const cancelUrl = payload.cancelUrl || CANCEL_URL;
 
-  const offer = await db.getDocument(DB, 'config', 'offer');
-  const price = offer.futurePrice;
-  const currency = offer.currency;
-  if (typeof price !== 'number' || !Number.isFinite(price) || !currency) {
-    error(`offer config invalid: futurePrice=${price} currency=${currency}`);
-    return res.json({ ok: false, error: 'Could not start PayPal checkout.' });
+  let offer;
+  try {
+    offer = await db.getDocument(DB, 'config', 'offer');
+  } catch(e) {
+    log(`getDocument offer failed: ${e.message} — using default $2.00 USD`);
+    offer = { futurePrice: 2.00, currency: 'USD' };
   }
+
+  const price = offer.futurePrice ?? 2.00;
+  const currency = offer.currency ?? 'USD';
   const value = Number(price).toFixed(2);
 
   const token = await paypalAccessToken();
