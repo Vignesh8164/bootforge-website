@@ -413,9 +413,14 @@ function initPayPalCheckout() {
       try {
         await ensureAppwriteSession();
 
+        const webReturnUrl = window.location.origin + window.location.pathname;
         const exec = await appwriteFunctions.createExecution(
           FN_CREATE_PAYPAL_ORDER,
-          JSON.stringify({ email: emailVal })
+          JSON.stringify({ 
+            email: emailVal,
+            returnUrl: webReturnUrl,
+            cancelUrl: webReturnUrl
+          })
         );
 
         let data = {};
