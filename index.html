@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BootForge — Redefining Bootable USB Creation from Android</title>
+  <meta name="description" content="BootForge is the luxury red/black glassmorphic Android app to create bootable Windows and Linux USB drives directly via OTG. Full Pro version for only $2 via PayPal.">
+  <link rel="canonical" href="https://bootforge.me/">
+
+  <!-- Open Graph / Social Media Meta Tags -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://bootforge.me/">
+  <meta property="og:title" content="BootForge — Redefining Bootable USB Creation from Android">
+  <meta property="og:description" content="Turn your Android smartphone into a raw SCSI block flasher. Zero PC required. Created by Vignesh Guruswamy.">
+  <meta property="og:image" content="https://bootforge.me/assets/images/hero_otg_setup.png">
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BootForge — Bootable USB Creation from Android">
+  <meta name="twitter:description" content="Turn your Android smartphone into a raw SCSI block flasher. Zero PC required.">
+  <meta name="twitter:image" content="https://bootforge.me/assets/images/hero_otg_setup.png">
+
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- GSAP & ScrollTrigger CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+</head>
+<body>
+  <!-- Crimson Red Ambient Gradient Orbs Background -->
+  <div class="orb-container">
+    <div class="red-blob red-blob-1"></div>
+    <div class="red-blob red-blob-2"></div>
+    <div class="red-blob red-blob-3"></div>
+  </div>
+
+  <!-- Slim Glass Top Navigation -->
+  <div class="navbar-wrapper">
+    <nav class="glass-nav" id="main-nav">
+      <a href="#" class="brand" id="nav-brand">
+        <span class="brand-icon-neu">BF</span>
+        <span>BootForge</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#sequence" id="nav-sequence">Boot Sequence</a></li>
+        <li><a href="#platform" id="nav-platform">Platform</a></li>
+        <li><a href="#calculator" id="nav-calculator">OTG Calculator</a></li>
+        <li><a href="#creator" id="nav-creator">Creator</a></li>
+        <li><a href="#pricing" id="nav-pricing">Pricing</a></li>
+      </ul>
+
+      <div class="nav-right-cluster">
+        <button class="neu-btn-circle glow-ring" id="nav-btn-icon" aria-label="Settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <main class="container">
+    <!-- Full-Viewport Hero Section -->
+    <section class="hero-section" id="hero">
+      <div class="glass-hero-panel">
+        <div class="hero-meta-top">
+          <div class="eyebrow-stacked">
+            <span class="word-bold">HARDWARE</span>
+            <span class="word-light">PROTOCOL</span>
+          </div>
+          <span class="hero-tagline-italic">"Bootable USBs, forged on your phone"</span>
+        </div>
+
+        <div class="hero-content">
+          <h1 class="hero-headline-multiline">
+            Boot Windows. <br>
+            <span class="accent-red">Direct from</span> <br>
+            Android.
+          </h1>
+
+          <p class="hero-body">
+            Turn your Android smartphone into a raw SCSI block flasher. Zero PC required. 
+            Get full BootForge Pro access for only $2 via PayPal with instant APK delivery.
+          </p>
+
+          <a href="#pricing" class="neu-pill-btn" id="hero-cta-btn">
+            <span>Buy Pro Version — $2 (PayPal)</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+
+          <div class="hero-meta-bottom">
+            <span class="hero-handle">@bootforge_engine • v2.4 Native</span>
+            <span style="color: var(--red-signal);">● PayPal Secured Checkout</span>
+          </div>
+        </div>
+
+        <div class="hero-mockup-wrap">
+          <div class="glass-card-inner" id="hero-3d-card">
+            <img src="assets/images/hero_otg_setup.png" alt="BootForge OTG Setup Render" class="hero-img">
+            <div style="margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-secondary);">SanDisk 3.2Gen1 (14.61 GB)</span>
+              <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--red-signal); font-weight: 700;">11.7 MB/s Avg</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ecosystem / Logo Strip -->
+    <section class="ecosystem-section">
+      <div class="glass-band">
+        <div class="eco-item"><span class="dot-red"></span> Snapdragon 8 Gen 3</div>
+        <div class="eco-item"><span class="dot-red"></span> SanDisk 3.2Gen1 OTG</div>
+        <div class="eco-item"><span class="dot-red"></span> Windows 11 25H2 ISO</div>
+        <div class="eco-item"><span class="dot-red"></span> Ubuntu 24.04 LTS</div>
+        <div class="eco-item"><span class="dot-red"></span> PayPal Direct Checkout</div>
+        <div class="eco-item"><span class="dot-red"></span> Userspace SCSI (libusb)</div>
+      </div>
+    </section>
+
+    <!-- About / Platform: Numbered Glass Cards 01-04 -->
+    <section class="section-spacer" id="platform">
+      <div class="section-title-wrap">
+        <div class="eyebrow-stacked" style="margin-bottom: 0.5rem;">
+          <span class="word-bold">PLATFORM</span>
+          <span class="word-light">ARCHITECTURE</span>
+        </div>
+        <h2>Four Pillars of Direct OTG Flashing</h2>
+      </div>
+
+      <div class="platform-grid">
+        <div class="glass-card-num">
+          <div class="card-num-head">
+            <span class="big-num">01</span>
+            <div class="eyebrow-stacked">
+              <span class="word-bold">USB</span>
+              <span class="word-light">ACCESS</span>
+            </div>
+          </div>
+          <p>Claims Android USB Host interface via userspace SCSI over Bulk-Only Transport (`libusb`). No root required.</p>
+        </div>
+
+        <div class="glass-card-num">
+          <div class="card-num-head">
+            <span class="big-num">02</span>
+            <div class="eyebrow-stacked">
+              <span class="word-bold">DUAL</span>
+              <span class="word-light">PARTITION</span>
+            </div>
+          </div>
+          <p>Plans FAT32 boot partition (1.01 GB) alongside an exFAT data partition for oversized `install.wim` (>4GB).</p>
+        </div>
+
+        <div class="glass-card-num">
+          <div class="card-num-head">
+            <span class="big-num">03</span>
+            <div class="eyebrow-stacked">
+              <span class="word-bold">ISO</span>
+              <span class="word-light">COPY</span>
+            </div>
+          </div>
+          <p>Parses ISO9660/UDF image file table & transfers files using Rufus and Microsoft MCT style UEFI boot mode.</p>
+        </div>
+
+        <div class="glass-card-num">
+          <div class="card-num-head">
+            <span class="big-num">04</span>
+            <div class="eyebrow-stacked">
+              <span class="word-bold">BIT</span>
+              <span class="word-light">VERIFIED</span>
+            </div>
+          </div>
+          <p>Full content integrity verification pass against the ISO image before safe unmount to guarantee PC boot success.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 1: The Boot Sequence Interactive Simulator -->
+    <section class="section-spacer" id="sequence">
+      <div class="section-title-wrap">
+        <div class="eyebrow-stacked" style="margin-bottom: 0.5rem;">
+          <span class="word-bold">LIVE BOOT</span>
+          <span class="word-light">ENGINE</span>
+        </div>
+        <h2>The Complete Boot Sequence</h2>
+        <p style="color: var(--text-secondary); font-weight: 300; margin-top: 0.5rem;">Matched 1:1 with real-world BootForge Android app execution logs.</p>
+      </div>
+
+      <div class="boot-sim-panel" id="boot-simulator">
+        <div style="display: flex; flex-direction: column; gap: 0.85rem;" id="steps-list">
+          <div class="neu-step-item active" data-step="1">
+            <div class="step-disc">01</div>
+            <div>
+              <h4 style="font-size: 0.95rem; font-weight: 600;">USB Access & Hardware Grant</h4>
+              <p style="font-size: 0.8rem; color: var(--text-muted);">Requesting OTG permission & SCSI interface</p>
+            </div>
+          </div>
+
+          <div class="neu-step-item" data-step="2">
+            <div class="step-disc">02</div>
+            <div>
+              <h4 style="font-size: 0.95rem; font-weight: 600;">ISO Analysis & Media Mode</h4>
+              <p style="font-size: 0.8rem; color: var(--text-muted);">Parsing ISO9660/UDF file table & install.wim</p>
+            </div>
+          </div>
+
+          <div class="neu-step-item" data-step="3">
+            <div class="step-disc">03</div>
+            <div>
+              <h4 style="font-size: 0.95rem; font-weight: 600;">Dual-Partition Planning</h4>
+              <p style="font-size: 0.8rem; color: var(--text-muted);">Planning FAT32 Boot + exFAT Data partitions</p>
+            </div>
+          </div>
+
+          <div class="neu-step-item" data-step="4">
+            <div class="step-disc">04</div>
+            <div>
+              <h4 style="font-size: 0.95rem; font-weight: 600;">File Copy & Write Stream</h4>
+              <p style="font-size: 0.8rem; color: var(--text-muted);">Writing 976 files (7.88 GB) @ 11.7 MB/s avg</p>
+            </div>
+          </div>
+
+          <div class="neu-step-item" data-step="5">
+            <div class="step-disc">05</div>
+            <div>
+              <h4 style="font-size: 0.95rem; font-weight: 600;">Filesystem Verification</h4>
+              <p style="font-size: 0.8rem; color: var(--text-muted);">Verifying file contents against ISO image</p>
+            </div>
+          </div>
+
+          <div class="neu-step-item" data-step="6">
+            <div class="step-disc">06</div>
+            <div>
+              <h4 style="font-size: 0.95rem; font-weight: 600;">UEFI Boot Layout Ready</h4>
+              <p style="font-size: 0.8rem; color: var(--text-muted);">Done in ~17m 21s. FAT32 + exFAT ready</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="terminal-viewport">
+          <div class="term-top">
+            <span>bootforge_kernel_daemon — ttyUSB0</span>
+            <span style="color: var(--red-signal);">● SCSI ACTIVE</span>
+          </div>
+
+          <div class="term-body" id="terminal-body">
+            <div class="term-line"><span class="prefix">Requesting access...</span></div>
+            <div class="term-line"><span class="prefix">[00:10:40]</span> <span class="success">USB access granted.</span></div>
+            <div class="term-line"><span class="prefix">[00:10:41]</span> <span class="highlight">USB ready: SanDisk 3.2Gen1 (14.61 GB)</span></div>
+            <div class="term-line"><span class="prefix">[00:10:46]</span> <span class="highlight">ISO selected: Win11_25H2_English_x64_v2.iso (7.89 GB)</span></div>
+            <div class="term-line"><span class="prefix">[00:10:46]</span> Image type: plain ISO9660/UDF (standard Windows ISO). Windows-media mode selected.</div>
+            <div class="term-line"><span class="prefix">[00:11:03]</span> Claiming USB interface (userspace SCSI over Bulk-Only Transport)...</div>
+            <div class="term-line"><span class="prefix">[00:11:03]</span> <span class="highlight">USB transport: libusb</span></div>
+          </div>
+
+          <div class="term-progress-track">
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 0.4rem; font-family: var(--font-mono);">
+              <span id="term-status-text">Step 01 / USB Access & Hardware Grant</span>
+              <span id="term-progress-percent" style="color: var(--red-signal); font-weight: 700;">16%</span>
+            </div>
+            <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden;">
+              <div class="bar-fill-red" id="term-progress-fill" style="width: 16%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4-Step Process Flow -->
+    <section class="section-spacer">
+      <div class="section-title-wrap">
+        <div class="eyebrow-stacked" style="margin-bottom: 0.5rem;">
+          <span class="word-bold">SYSTEM</span>
+          <span class="word-light">WORKFLOW</span>
+        </div>
+        <h2>Four-Stage Creation Process</h2>
+      </div>
+
+      <div class="process-flow-grid">
+        <div class="process-line"></div>
+
+        <div class="process-card">
+          <div class="step-coin">01</div>
+          <h4>Collect & Detect</h4>
+          <p>Scan OTG flash drive & request Android USB Host permission.</p>
+        </div>
+
+        <div class="process-card">
+          <div class="step-coin">02</div>
+          <h4>Process ISO</h4>
+          <p>Parse ISO9660/UDF file table & plan FAT32 + exFAT partitions.</p>
+        </div>
+
+        <div class="process-card">
+          <div class="step-coin">03</div>
+          <h4>Write Sectors</h4>
+          <p>Stream 976 files (7.88 GB) via userspace SCSI over Bulk-Only Transport.</p>
+        </div>
+
+        <div class="process-card">
+          <div class="step-coin">04</div>
+          <h4>Verify & Deliver</h4>
+          <p>Bit-by-bit content verification pass and safe drive unmount for PC UEFI boot.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Real-World OTG Speed Diagnostics Calculator -->
+    <section class="section-spacer" id="calculator">
+      <div class="section-title-wrap">
+        <div class="eyebrow-stacked" style="margin-bottom: 0.5rem;">
+          <span class="word-bold">DIAGNOSTIC</span>
+          <span class="word-light">CALCULATOR</span>
+        </div>
+        <h2>Calculate Your OTG Flash Time</h2>
+        <p style="color: var(--text-secondary); font-weight: 300; margin-top: 0.5rem;">Includes full file copy & 100% bit verification pass overhead.</p>
+      </div>
+
+      <div style="background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: var(--radius-panel); padding: 3.5rem 3rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;">
+          <div style="display: flex; flex-direction: column; gap: 1.75rem;">
+            <div>
+              <label style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">SELECT OPERATING SYSTEM ISO</label>
+              <select id="iso-select" style="width: 100%; padding: 0.9rem 1rem; background: #0E0E10; border: 1px solid var(--glass-border); border-radius: 12px; color: #FFF; font-family: var(--font-mono); font-size: 0.9rem; outline: none;">
+                <option value="7890">Windows 11 25H2 (7.89 GB)</option>
+                <option value="4800">Ubuntu 24.04 LTS (4.80 GB)</option>
+                <option value="2400">Tails OS Privacy Live (2.40 GB)</option>
+                <option value="1100">Arch Linux x86_64 (1.10 GB)</option>
+                <option value="850">WinPE Recovery Disk (850 MB)</option>
+              </select>
+            </div>
+
+            <div>
+              <label style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">SELECT SMARTPHONE & OTG HARDWARE SPECIFICATION</label>
+              <select id="usb-select" style="width: 100%; padding: 0.9rem 1rem; background: #0E0E10; border: 1px solid var(--glass-border); border-radius: 12px; color: #FFF; font-family: var(--font-mono); font-size: 0.85rem; outline: none;">
+                <option value="11.7">Mid-Range Smartphone (12GB RAM) + SanDisk 3.2Gen1 (~11.7 MB/s Effective + Verification)</option>
+                <option value="24.5">High-End Flagship Phone (Snapdragon 8 Gen 3) + Fast NVMe OTG (~24.5 MB/s Effective + Verification)</option>
+                <option value="8.5">Standard Smartphone + USB 3.0 Drive (~8.5 MB/s Effective + Verification)</option>
+                <option value="4.2">Legacy Device / Budget USB 2.0 OTG (~4.2 MB/s Effective + Verification)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="background: #08080A; border: 1px solid var(--glass-border); border-radius: 20px; padding: 3rem 2rem; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">ESTIMATED TOTAL FLASH & VERIFY TIME</span>
+            <div id="calc-time-display" style="font-size: 3.6rem; font-weight: 800; color: var(--red-signal); font-family: var(--font-mono); margin: 1rem 0; text-shadow: 0 0 30px rgba(227, 38, 54, 0.4);">18m 12s</div>
+            <span style="font-family: var(--font-mono); font-size: 0.8rem; color: #10B981;">✓ Verified FAT32 Boot + exFAT Data Structure</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Creator Section: Vignesh Guruswamy -->
+    <section class="section-spacer" id="creator">
+      <div class="section-title-wrap">
+        <div class="eyebrow-stacked" style="margin-bottom: 0.5rem;">
+          <span class="word-bold">MEET THE</span>
+          <span class="word-light">ARCHITECT</span>
+        </div>
+        <h2>Behind the Boot Engine</h2>
+      </div>
+
+      <div style="background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: var(--radius-panel); padding: 3.5rem 3rem; box-shadow: 0 30px 70px rgba(0,0,0,0.8);">
+        <div style="display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 3.5rem; align-items: center;">
+          <!-- Creator Photo Container -->
+          <div style="position: relative;">
+            <div style="background: rgba(10,10,10,0.8); border: 1px solid var(--glass-border); border-radius: 24px; padding: 0.85rem; box-shadow: 0 0 30px rgba(227, 38, 54, 0.25);">
+              <img src="assets/images/creator_vignesh.jpg" alt="Vignesh Guruswamy - Creator of BootForge" style="width: 100%; border-radius: 18px; display: block; object-fit: cover;">
+            </div>
+            <div style="position: absolute; bottom: -1rem; left: 50%; transform: translateX(-50%); background: rgba(18,18,20,0.95); backdrop-filter: blur(12px); border: 1px solid var(--red-signal); padding: 0.4rem 1.2rem; border-radius: 99px; font-family: var(--font-mono); font-size: 0.78rem; white-space: nowrap; color: #FFF; box-shadow: 0 0 15px rgba(227, 38, 54, 0.4);">
+              🇮🇳 AI Engineer • Based in India
+            </div>
+          </div>
+
+          <!-- Creator Details & Bio -->
+          <div>
+            <div class="eyebrow-stacked" style="margin-bottom: 0.5rem;">
+              <span class="word-bold">CREATOR &</span>
+              <span class="word-light">DEVELOPER</span>
+            </div>
+
+            <h3 style="font-size: 2.5rem; font-weight: 800; color: #FFF; margin-bottom: 0.4rem;">Vignesh Guruswamy</h3>
+            <p style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--red-signal); font-weight: 600; margin-bottom: 1.5rem;">AI Engineer & Systems Developer</p>
+
+            <p style="font-size: 1rem; color: var(--text-secondary); font-weight: 300; line-height: 1.7; margin-bottom: 2rem;">
+              Architect of BootForge — bridging high-performance C++ kernel protocol manipulation with intelligent Android hardware access. Focused on building low-level system software, embedded hardware interfaces, and autonomous AI architectures.
+            </p>
+
+            <!-- Feature Badges/Chips -->
+            <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 2.5rem;">
+              <span style="background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); padding: 0.45rem 1rem; border-radius: 99px; font-size: 0.82rem; color: var(--text-primary); font-family: var(--font-mono);">🧠 AI Engineering</span>
+              <span style="background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); padding: 0.45rem 1rem; border-radius: 99px; font-size: 0.82rem; color: var(--text-primary); font-family: var(--font-mono);">⚡ Low-Level C++ & SCSI</span>
+              <span style="background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); padding: 0.45rem 1rem; border-radius: 99px; font-size: 0.82rem; color: var(--text-primary); font-family: var(--font-mono);">📱 Android Kernel I/O</span>
+              <span style="background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); padding: 0.45rem 1rem; border-radius: 99px; font-size: 0.82rem; color: var(--text-primary); font-family: var(--font-mono);">🇮🇳 India</span>
+            </div>
+
+            <!-- GitHub Profile CTA -->
+            <a href="https://github.com/vignesh8164" target="_blank" class="neu-pill-btn" style="display: inline-flex; align-items: center; gap: 0.75rem;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              <span>Follow @vignesh8164 on GitHub</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing & PayPal Section ($2 Product Price) -->
+    <section class="section-spacer" id="pricing">
+      <div class="section-title-wrap">
+        <div class="eyebrow-stacked" style="margin-bottom: 0.5rem;">
+          <span class="word-bold">SIMPLE</span>
+          <span class="word-light">PRICING</span>
+        </div>
+        <h2>Get BootForge Pro for $2</h2>
+        <p style="color: var(--text-secondary); font-weight: 300; margin-top: 0.5rem;">One-time lifetime payment processed securely via PayPal.</p>
+      </div>
+
+      <div style="max-width: 600px; margin: 0 auto;">
+        <!-- Featured $2 BootForge Pro Card -->
+        <div class="pricing-card featured" style="text-align: center; align-items: center;">
+          <div style="width: 100%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <div class="eyebrow-stacked" style="text-align: left;">
+                <span class="word-bold">BOOTFORGE PRO</span>
+                <span class="word-light">FULL LICENSE</span>
+              </div>
+              <span style="background: #0070BA; font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 99px; color: #FFF; display: flex; align-items: center; gap: 0.4rem;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.761.761 0 0 1 .752-.644h6.417c2.474 0 4.385.578 5.485 1.66 1.054 1.036 1.401 2.535 1.002 4.32-.486 2.174-1.705 3.864-3.52 4.887-1.12.632-2.502.952-4.108.952H8.48l-.73 4.634a.64.64 0 0 1-.674.558zm3.082-9.431h2.155c1.69 0 2.946-.431 3.593-1.235.617-.768.835-1.84.629-3.093-.326-1.986-1.99-2.73-4.577-2.73H7.558l-1.99 12.634h2.24l1.35-8.576z"/></svg>
+                PayPal Accepted
+              </span>
+            </div>
+
+            <div class="price-val" style="font-size: 4rem; color: #FFF;">$2 <span style="font-size: 1.1rem; color: var(--text-secondary); font-weight: 400;">/ Lifetime</span></div>
+            <p style="font-size: 0.95rem; color: var(--text-secondary); margin-top: 0.5rem;">Full access to all Android OTG boot creation capabilities. No subscriptions.</p>
+
+            <ul class="pricing-features" style="text-align: left; margin: 2rem 0; width: 100%;">
+              <li>Full Windows 11 25H2 Automated TPM & RAM Check Bypass</li>
+              <li>FAT32 Boot + exFAT Data Dual Partition Creation</li>
+              <li>Ventoy Multi-Boot ISO Integration & Support</li>
+              <li>100% Bit-by-Bit Filesystem Verification Pass</li>
+              <li>No Root Access Required (`libusb` SCSI Transport)</li>
+              <li>Instant APK Download & License Activation via PayPal Email</li>
+            </ul>
+
+            <button class="neu-pill-btn" id="paypal-checkout-btn" style="width: 100%; justify-content: center; background: #0070BA; border-color: #005EA6; box-shadow: 0 0 25px rgba(0, 112, 186, 0.5); font-size: 1.05rem; padding: 1.15rem 2rem;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.761.761 0 0 1 .752-.644h6.417c2.474 0 4.385.578 5.485 1.66 1.054 1.036 1.401 2.535 1.002 4.32-.486 2.174-1.705 3.864-3.52 4.887-1.12.632-2.502.952-4.108.952H8.48l-.73 4.634a.64.64 0 0 1-.674.558zm3.082-9.431h2.155c1.69 0 2.946-.431 3.593-1.235.617-.768.835-1.84.629-3.093-.326-1.986-1.99-2.73-4.577-2.73H7.558l-1.99 12.634h2.24l1.35-8.576z"/></svg>
+              <span>Pay $2.00 with PayPal</span>
+            </button>
+
+            <span style="display: block; font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted); margin-top: 1rem;">🔒 256-bit Encrypted SSL • Secured via PayPal Checkout</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Big CTA Panel -->
+    <section class="big-cta-panel">
+      <h2>Boot any PC. <br><span style="color: var(--red-signal);">Directly from your pocket.</span></h2>
+      <p style="max-width: 580px; margin: 1.25rem auto 2.5rem auto; color: var(--text-secondary); font-weight: 300;">Get full BootForge Pro access for only $2 via PayPal.</p>
+      <a href="#pricing" class="neu-pill-btn">
+        <span>Buy Pro Version — $2 (PayPal)</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <polyline points="19 12 12 19 5 12"></polyline>
+        </svg>
+      </a>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#" class="brand">
+            <span class="brand-icon-neu">BF</span>
+            <span>BootForge</span>
+          </a>
+        </div>
+
+        <div class="footer-col">
+          <h5>Product</h5>
+          <ul>
+            <li><a href="#sequence">Boot Sequence</a></li>
+            <li><a href="#platform">Platform 01-04</a></li>
+            <li><a href="#calculator">OTG Calculator</a></li>
+            <li><a href="#creator">Creator</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Payment</h5>
+          <ul>
+            <li><a href="#pricing">PayPal Checkout</a></li>
+            <li><a href="#pricing">Instant APK License</a></li>
+            <li><a href="#pricing">PayPal Buyer Protection</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Creator & Links</h5>
+          <ul>
+            <li><a href="https://github.com/vignesh8164" target="_blank">GitHub (@vignesh8164)</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="#">SHA-256 Checksums</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 BootForge Systems Inc. Built by Vignesh Guruswamy. All rights reserved.</span>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--red-signal); box-shadow: 0 0 8px var(--red-signal);"></span>
+          <span style="font-family: var(--font-mono); font-size: 0.8rem;">Kernel Active</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
