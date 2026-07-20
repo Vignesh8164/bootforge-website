@@ -156,7 +156,7 @@ h4 {
   font-weight: 700;
 }
 
-/* 3. Slim Glass Navigation Header */
+/* 3. Slim Glass Navigation Header & Breathing Gear Glow */
 .navbar-wrapper {
   position: fixed;
   top: 1.5rem;
@@ -171,7 +171,7 @@ h4 {
 .glass-nav {
   width: 100%;
   max-width: 1100px;
-  background: rgba(14, 14, 16, 0.7);
+  background: rgba(14, 14, 16, 0.75);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--glass-border);
@@ -181,6 +181,7 @@ h4 {
   align-items: center;
   justify-content: space-between;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
 }
 
 .brand {
@@ -191,6 +192,7 @@ h4 {
   color: var(--text-primary);
   font-weight: 700;
   font-size: 1.15rem;
+  flex-shrink: 0;
 }
 
 .brand-icon-neu {
@@ -211,13 +213,16 @@ h4 {
 .nav-expand-group {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 2rem;
 }
 
 .nav-links {
   display: flex;
   list-style: none;
-  gap: 1.8rem;
+  gap: 2rem;
+  align-items: center;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-links a {
@@ -226,7 +231,7 @@ h4 {
   font-size: 0.9rem;
   font-weight: 500;
   white-space: nowrap;
-  transition: var(--transition);
+  transition: color 0.25s ease, text-shadow 0.25s ease;
 }
 
 .nav-links a:hover {
@@ -234,35 +239,67 @@ h4 {
   text-shadow: 0 0 12px var(--red-glow);
 }
 
-/* Gear Icon Interactive Expand/Collapse Motion (Desktop) */
-@media (min-width: 993px) {
-  .nav-expand-group {
-    position: relative;
+/* Breathing Gear Icon Idle Animation */
+@keyframes gearIdleGlow {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(227, 38, 54, 0.35), 0 0 4px rgba(227, 38, 54, 0.2);
+    border-color: rgba(227, 38, 54, 0.4);
   }
+  50% {
+    box-shadow: 0 0 22px rgba(227, 38, 54, 0.75), 0 0 8px rgba(227, 38, 54, 0.5);
+    border-color: rgba(227, 38, 54, 0.8);
+  }
+}
 
-  .nav-links {
-    max-width: 0;
+#nav-btn-icon {
+  animation: gearIdleGlow 3.5s ease-in-out infinite;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s ease,
+              border-color 0.35s ease;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Apple & Linear-Style BootUp Staggered Reveal (Desktop) */
+@media (min-width: 993px) {
+  .nav-links li {
     opacity: 0;
-    overflow: hidden;
-    transform: translateX(25px);
-    transition: max-width 0.65s cubic-bezier(0.16, 1, 0.3, 1),
-                opacity 0.4s ease,
-                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(8px);
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: none;
   }
 
-  /* Reveal Navigation links when hovering over gear icon or nav container */
-  .glass-nav:hover .nav-links,
-  .nav-expand-group:hover .nav-links {
-    max-width: 800px;
+  /* Reveal Navigation labels on hover with staggered timing */
+  .glass-nav:hover .nav-links li,
+  .nav-expand-group:hover .nav-links li {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
     pointer-events: auto;
   }
 
-  /* Smooth 360-Degree Gear Rotation */
+  /* Staggered Delay per Navigation Item (80ms increments) */
+  .glass-nav:hover .nav-links li:nth-child(1),
+  .nav-expand-group:hover .nav-links li:nth-child(1) { transition-delay: 0ms; }
+
+  .glass-nav:hover .nav-links li:nth-child(2),
+  .nav-expand-group:hover .nav-links li:nth-child(2) { transition-delay: 80ms; }
+
+  .glass-nav:hover .nav-links li:nth-child(3),
+  .nav-expand-group:hover .nav-links li:nth-child(3) { transition-delay: 160ms; }
+
+  .glass-nav:hover .nav-links li:nth-child(4),
+  .nav-expand-group:hover .nav-links li:nth-child(4) { transition-delay: 240ms; }
+
+  .glass-nav:hover .nav-links li:nth-child(5),
+  .nav-expand-group:hover .nav-links li:nth-child(5) { transition-delay: 320ms; }
+
+  .glass-nav:hover .nav-links li:nth-child(6),
+  .nav-expand-group:hover .nav-links li:nth-child(6) { transition-delay: 400ms; }
+
+  /* Gear 360-Degree Ease-In-Out Rotation & Enhanced Glow */
   #nav-btn-icon svg {
-    transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .glass-nav:hover #nav-btn-icon svg,
@@ -271,15 +308,11 @@ h4 {
     transform: rotate(360deg);
   }
 
-  #nav-btn-icon {
-    box-shadow: 0 0 15px rgba(227, 38, 54, 0.4);
-    transition: all 0.4s ease;
-  }
-
   .glass-nav:hover #nav-btn-icon,
   .nav-expand-group:hover #nav-btn-icon {
-    border-color: rgba(227, 38, 54, 0.8);
-    box-shadow: 0 0 25px rgba(227, 38, 54, 0.85);
+    animation: none;
+    box-shadow: 0 0 28px rgba(227, 38, 54, 0.9), 0 0 10px rgba(227, 38, 54, 0.6);
+    border-color: rgba(255, 255, 255, 0.8);
   }
 }
 
