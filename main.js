@@ -292,7 +292,7 @@ function initPayPalCheckout() {
   });
 }
 
-/* 6. Mobile Navigation & Settings Drawer Controller (Single Control Button: Settings Gear) */
+/* 6. Navigation & Settings Drawer Controller (Single Control Button: Settings Gear) */
 function initMobileMenu() {
   const gearBtn = document.getElementById('nav-btn-icon');
   const drawer = document.getElementById('mobile-nav-drawer');
@@ -314,14 +314,19 @@ function initMobileMenu() {
     drawer.setAttribute('aria-hidden', 'true');
   }
 
-  gearBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
+  function toggleMenu(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (drawer.classList.contains('open')) {
       closeMenu();
     } else {
       openMenu();
     }
-  });
+  }
+
+  gearBtn.addEventListener('click', toggleMenu);
 
   mobileLinks.forEach(link => {
     link.addEventListener('click', () => {
@@ -330,7 +335,17 @@ function initMobileMenu() {
   });
 
   document.addEventListener('click', (e) => {
-    if (drawer.classList.contains('open') && !drawer.contains(e.target) && !gearBtn.contains(e.target)) {
+    if (drawer.classList.contains('open')) {
+      const isClickInsideDrawer = drawer.contains(e.target);
+      const isClickOnGear = gearBtn.contains(e.target);
+      if (!isClickInsideDrawer && !isClickOnGear) {
+        closeMenu();
+      }
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer.classList.contains('open')) {
       closeMenu();
     }
   });
