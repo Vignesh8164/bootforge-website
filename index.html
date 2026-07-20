@@ -65,8 +65,38 @@
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
           </svg>
         </button>
+
+        <button class="neu-btn-circle mobile-hamburger" id="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg class="icon-menu" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+          <svg class="icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
     </nav>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-nav-drawer" id="mobile-nav-drawer" aria-hidden="true">
+      <ul class="mobile-nav-links">
+        <li><a href="#sequence" class="mobile-nav-link">Boot Sequence</a></li>
+        <li><a href="#platform" class="mobile-nav-link">Platform</a></li>
+        <li><a href="#calculator" class="mobile-nav-link">OTG Calculator</a></li>
+        <li><a href="#creator" class="mobile-nav-link">Creator</a></li>
+        <li><a href="#pricing" class="mobile-nav-link">Pricing</a></li>
+        <li><a href="#download" class="mobile-nav-link">Download APK</a></li>
+        <li><a href="privacy.html" class="mobile-nav-link">Privacy Policy</a></li>
+      </ul>
+      <div class="mobile-drawer-cta">
+        <a href="#pricing" class="neu-pill-btn mobile-cta-btn">
+          <span>Buy Pro — $2 (PayPal)</span>
+        </a>
+      </div>
+    </div>
   </div>
 
   <main class="container">
@@ -330,8 +360,8 @@
         <p style="color: var(--text-secondary); font-weight: 300; margin-top: 0.5rem;">Direct high-speed APK package. Zero Play Store dependency. Native arm64-v8a build.</p>
       </div>
 
-      <div class="apk-download-panel">
-        <div style="display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 3.5rem; align-items: center;">
+      <div class="apk-download-panel responsive-panel">
+        <div class="apk-grid-wrap">
           <!-- Left: Futuristic 3D APK Badge Preview with Clickable Glowing Download Icon -->
           <div class="apk-card-preview">
             <a href="apk/BootForge-v2.0.0-Debug.apk" download="BootForge-v2.0.0-Debug.apk" class="apk-icon-glow-link" title="Click to Download BootForge APK">
@@ -346,7 +376,7 @@
             <h3 style="font-size: 1.5rem; font-weight: 800; color: #FFF; margin-bottom: 0.25rem;">BootForge v2.0.0</h3>
             <span style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--red-signal); font-weight: 700;">BootForge-v2.0.0-Debug.apk</span>
             
-            <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 1.25rem; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-secondary);">
+            <div class="apk-meta-row">
               <span>📱 Android 8.0+</span>
               <span>•</span>
               <span>⚡ Arm64-v8a</span>
@@ -360,22 +390,22 @@
               <span class="word-light">INSTALLATION</span>
             </div>
 
-            <h3 style="font-size: 2.2rem; font-weight: 800; color: #FFF; margin-bottom: 1rem;">Ready for Android OTG</h3>
-            <p style="font-size: 1rem; color: var(--text-secondary); font-weight: 300; line-height: 1.7; margin-bottom: 1.75rem;">
+            <h3 class="apk-detail-title">Ready for Android OTG</h3>
+            <p class="apk-detail-body">
               Flash bootable Windows & Linux USB drives directly from your Android phone. No root required. Built natively using `libusb` SCSI protocol for maximum transfer speed.
             </p>
 
             <!-- Feature Chips -->
-            <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 2rem;">
-              <span style="background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); padding: 0.45rem 1rem; border-radius: 99px; font-size: 0.82rem; color: var(--text-primary); font-family: var(--font-mono);">⚡ Direct APK Package</span>
-              <span style="background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); padding: 0.45rem 1rem; border-radius: 99px; font-size: 0.82rem; color: var(--text-primary); font-family: var(--font-mono);">🛡️ 100% Signed & Verified</span>
-              <span style="background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); padding: 0.45rem 1rem; border-radius: 99px; font-size: 0.82rem; color: var(--text-primary); font-family: var(--font-mono);">📱 Android 8.0 to Android 15</span>
+            <div class="feature-chips-row">
+              <span class="chip-item">⚡ Direct APK Package</span>
+              <span class="chip-item">🛡️ 100% Signed & Verified</span>
+              <span class="chip-item">📱 Android 8.0 to Android 15</span>
             </div>
 
             <!-- SHA-256 Checksum Box -->
-            <div class="hash-copy-box">
-              <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                <span style="color: var(--red-signal); font-weight: 700;">SHA-256:</span> 7C14C3257BD92DADB99A0DEB46C681C27FE355632B84997EAA22E964519F6DEA
+            <div class="hash-copy-box responsive-hash">
+              <div class="hash-text-wrap">
+                <span style="color: var(--red-signal); font-weight: 700;">SHA-256:</span> <span class="hash-val">7C14C3257BD92DADB99A0DEB46C681C27FE355632B84997EAA22E964519F6DEA</span>
               </div>
               <button class="hash-copy-btn" id="copy-hash-btn" onclick="copySHA256Hash()">Copy Hash</button>
             </div>
@@ -395,12 +425,12 @@
         <p style="color: var(--text-secondary); font-weight: 300; margin-top: 0.5rem;">Includes full file copy & 100% bit verification pass overhead.</p>
       </div>
 
-      <div style="background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: var(--radius-panel); padding: 3.5rem 3rem;">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;">
+      <div class="responsive-panel calc-panel">
+        <div class="calc-grid-wrap">
           <div style="display: flex; flex-direction: column; gap: 1.75rem;">
             <div>
               <label style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">SELECT OPERATING SYSTEM ISO</label>
-              <select id="iso-select" style="width: 100%; padding: 0.9rem 1rem; background: #0E0E10; border: 1px solid var(--glass-border); border-radius: 12px; color: #FFF; font-family: var(--font-mono); font-size: 0.9rem; outline: none;">
+              <select id="iso-select" class="calc-select">
                 <option value="7890">Windows 11 25H2 (7.89 GB)</option>
                 <option value="4800">Ubuntu 24.04 LTS (4.80 GB)</option>
                 <option value="2400">Tails OS Privacy Live (2.40 GB)</option>
@@ -411,7 +441,7 @@
 
             <div>
               <label style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">SELECT SMARTPHONE & OTG HARDWARE SPECIFICATION</label>
-              <select id="usb-select" style="width: 100%; padding: 0.9rem 1rem; background: #0E0E10; border: 1px solid var(--glass-border); border-radius: 12px; color: #FFF; font-family: var(--font-mono); font-size: 0.85rem; outline: none;">
+              <select id="usb-select" class="calc-select">
                 <option value="11.7">Mid-Range Smartphone (12GB RAM) + SanDisk 3.2Gen1 (~11.7 MB/s Effective + Verification)</option>
                 <option value="24.5">High-End Flagship Phone (Snapdragon 8 Gen 3) + Fast NVMe OTG (~24.5 MB/s Effective + Verification)</option>
                 <option value="8.5">Standard Smartphone + USB 3.0 Drive (~8.5 MB/s Effective + Verification)</option>
@@ -420,9 +450,9 @@
             </div>
           </div>
 
-          <div style="background: #08080A; border: 1px solid var(--glass-border); border-radius: 20px; padding: 3rem 2rem; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <div class="calc-result-box">
             <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">ESTIMATED TOTAL FLASH & VERIFY TIME</span>
-            <div id="calc-time-display" style="font-size: 3.6rem; font-weight: 800; color: var(--red-signal); font-family: var(--font-mono); margin: 1rem 0; text-shadow: 0 0 30px rgba(227, 38, 54, 0.4);">18m 12s</div>
+            <div id="calc-time-display" class="calc-time-val">18m 12s</div>
             <span style="font-family: var(--font-mono); font-size: 0.8rem; color: #10B981;">✓ Verified FAT32 Boot + exFAT Data Structure</span>
           </div>
         </div>
@@ -439,14 +469,14 @@
         <h2>Behind the Boot Engine</h2>
       </div>
 
-      <div style="background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: var(--radius-panel); padding: 3.5rem 3rem; box-shadow: 0 30px 70px rgba(0,0,0,0.8);">
-        <div style="display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 3.5rem; align-items: center;">
+      <div class="responsive-panel creator-panel">
+        <div class="creator-grid-wrap">
           <!-- Creator Photo Container -->
           <div style="position: relative;">
             <div style="background: rgba(10,10,10,0.8); border: 1px solid var(--glass-border); border-radius: 24px; padding: 0.85rem; box-shadow: 0 0 30px rgba(227, 38, 54, 0.25);">
               <img src="assets/images/creator_vignesh.jpg" alt="Vignesh Guruswamy - Creator of BootForge" style="width: 100%; border-radius: 18px; display: block; object-fit: cover;">
             </div>
-            <div style="position: absolute; bottom: -1rem; left: 50%; transform: translateX(-50%); background: rgba(18,18,20,0.95); backdrop-filter: blur(12px); border: 1px solid var(--red-signal); padding: 0.4rem 1.2rem; border-radius: 99px; font-family: var(--font-mono); font-size: 0.78rem; white-space: nowrap; color: #FFF; box-shadow: 0 0 15px rgba(227, 38, 54, 0.4);">
+            <div class="creator-badge">
               🇮🇳 AI Engineer • Based in India
             </div>
           </div>
@@ -458,23 +488,23 @@
               <span class="word-light">DEVELOPER</span>
             </div>
 
-            <h3 style="font-size: 2.5rem; font-weight: 800; color: #FFF; margin-bottom: 0.4rem;">Vignesh Guruswamy</h3>
+            <h3 class="creator-name">Vignesh Guruswamy</h3>
             <p style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--red-signal); font-weight: 600; margin-bottom: 1.5rem;">AI Engineer & Systems Developer</p>
 
-            <p style="font-size: 1rem; color: var(--text-secondary); font-weight: 300; line-height: 1.7; margin-bottom: 2rem;">
+            <p class="creator-bio">
               Architect of BootForge — bridging high-performance C++ kernel protocol manipulation with intelligent Android hardware access. Focused on building low-level system software, embedded hardware interfaces, and autonomous AI architectures.
             </p>
 
             <!-- Feature Badges/Chips -->
-            <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 2.5rem;">
-              <span style="background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); padding: 0.45rem 1rem; border-radius: 99px; font-size: 0.82rem; color: var(--text-primary); font-family: var(--font-mono);">🧠 AI Engineering</span>
-              <span style="background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); padding: 0.45rem 1rem; border-radius: 99px; font-size: 0.82rem; color: var(--text-primary); font-family: var(--font-mono);">⚡ Low-Level C++ & SCSI</span>
-              <span style="background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); padding: 0.45rem 1rem; border-radius: 99px; font-size: 0.82rem; color: var(--text-primary); font-family: var(--font-mono);">📱 Android Kernel I/O</span>
-              <span style="background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); padding: 0.45rem 1rem; border-radius: 99px; font-size: 0.82rem; color: var(--text-primary); font-family: var(--font-mono);">🇮🇳 India</span>
+            <div class="feature-chips-row">
+              <span class="chip-item">🧠 AI Engineering</span>
+              <span class="chip-item">⚡ Low-Level C++ & SCSI</span>
+              <span class="chip-item">📱 Android Kernel I/O</span>
+              <span class="chip-item">🇮🇳 India</span>
             </div>
 
             <!-- GitHub Profile CTA -->
-            <a href="https://github.com/vignesh8164" target="_blank" class="neu-pill-btn" style="display: inline-flex; align-items: center; gap: 0.75rem;">
+            <a href="https://github.com/vignesh8164" target="_blank" class="neu-pill-btn creator-github-btn">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
               <span>Follow @vignesh8164 on GitHub</span>
             </a>
@@ -494,25 +524,25 @@
         <p style="color: var(--text-secondary); font-weight: 300; margin-top: 0.5rem;">One-time lifetime payment processed securely via PayPal.</p>
       </div>
 
-      <div style="max-width: 600px; margin: 0 auto;">
+      <div class="pricing-card-wrap">
         <!-- Featured $2 BootForge Pro Card -->
-        <div class="pricing-card featured" style="text-align: center; align-items: center;">
+        <div class="pricing-card featured">
           <div style="width: 100%;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="pricing-card-header">
               <div class="eyebrow-stacked" style="text-align: left;">
                 <span class="word-bold">BOOTFORGE PRO</span>
                 <span class="word-light">FULL LICENSE</span>
               </div>
-              <span style="background: #0070BA; font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 99px; color: #FFF; display: flex; align-items: center; gap: 0.4rem;">
+              <span class="paypal-accepted-badge">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.761.761 0 0 1 .752-.644h6.417c2.474 0 4.385.578 5.485 1.66 1.054 1.036 1.401 2.535 1.002 4.32-.486 2.174-1.705 3.864-3.52 4.887-1.12.632-2.502.952-4.108.952H8.48l-.73 4.634a.64.64 0 0 1-.674.558zm3.082-9.431h2.155c1.69 0 2.946-.431 3.593-1.235.617-.768.835-1.84.629-3.093-.326-1.986-1.99-2.73-4.577-2.73H7.558l-1.99 12.634h2.24l1.35-8.576z"/></svg>
                 PayPal Accepted
               </span>
             </div>
 
-            <div class="price-val" style="font-size: 4rem; color: #FFF;">$2 <span style="font-size: 1.1rem; color: var(--text-secondary); font-weight: 400;">/ Lifetime</span></div>
+            <div class="price-val">$2 <span class="price-period">/ Lifetime</span></div>
             <p style="font-size: 0.95rem; color: var(--text-secondary); margin-top: 0.5rem;">Full access to all Android OTG boot creation capabilities. No subscriptions.</p>
 
-            <ul class="pricing-features" style="text-align: left; margin: 2rem 0; width: 100%;">
+            <ul class="pricing-features">
               <li>Full Windows 11 25H2 Automated TPM & RAM Check Bypass</li>
               <li>FAT32 Boot + exFAT Data Dual Partition Creation</li>
               <li>Ventoy Multi-Boot ISO Integration & Support</li>
@@ -521,7 +551,7 @@
               <li>Instant APK Download & License Activation via PayPal Email</li>
             </ul>
 
-            <button class="neu-pill-btn" id="paypal-checkout-btn" style="width: 100%; justify-content: center; background: #0070BA; border-color: #005EA6; box-shadow: 0 0 25px rgba(0, 112, 186, 0.5); font-size: 1.05rem; padding: 1.15rem 2rem;">
+            <button class="neu-pill-btn paypal-btn-full" id="paypal-checkout-btn">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.761.761 0 0 1 .752-.644h6.417c2.474 0 4.385.578 5.485 1.66 1.054 1.036 1.401 2.535 1.002 4.32-.486 2.174-1.705 3.864-3.52 4.887-1.12.632-2.502.952-4.108.952H8.48l-.73 4.634a.64.64 0 0 1-.674.558zm3.082-9.431h2.155c1.69 0 2.946-.431 3.593-1.235.617-.768.835-1.84.629-3.093-.326-1.986-1.99-2.73-4.577-2.73H7.558l-1.99 12.634h2.24l1.35-8.576z"/></svg>
               <span>Pay $2.00 with PayPal</span>
             </button>
@@ -533,7 +563,7 @@
     </section>
 
     <!-- Big CTA Panel -->
-    <section class="big-cta-panel">
+    <section class="big-cta-panel responsive-panel">
       <h2>Boot any PC. <br><span style="color: var(--red-signal);">Directly from your pocket.</span></h2>
       <p style="max-width: 580px; margin: 1.25rem auto 2.5rem auto; color: var(--text-secondary); font-weight: 300;">Get full BootForge Pro access for only $2 via PayPal.</p>
       <a href="#pricing" class="neu-pill-btn">
@@ -586,7 +616,7 @@
         </div>
       </div>
 
-      <div class="footer-bottom">
+      <div class="footer-bottom-wrap">
         <span>© 2026 BootForge Systems Inc. Built by Vignesh Guruswamy. All rights reserved.</span>
         <div style="display: flex; gap: 0.5rem; align-items: center;">
           <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--red-signal); box-shadow: 0 0 8px var(--red-signal);"></span>

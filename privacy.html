@@ -26,7 +26,7 @@
 
   <!-- Navigation -->
   <div class="navbar-wrapper">
-    <nav class="glass-nav">
+    <nav class="glass-nav" id="main-nav">
       <a href="index.html" class="brand">
         <span class="brand-icon-neu">BF</span>
         <span>BootForge</span>
@@ -39,12 +39,37 @@
         <li><a href="index.html#pricing">Pricing</a></li>
       </ul>
 
-      <a href="index.html" class="neu-pill-btn" style="padding: 0.6rem 1.4rem; font-size: 0.85rem;">← Back to Main Page</a>
+      <div class="nav-right-cluster">
+        <a href="index.html" class="neu-pill-btn privacy-back-btn">← Back to Main Page</a>
+
+        <button class="neu-btn-circle mobile-hamburger" id="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg class="icon-menu" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+          <svg class="icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
     </nav>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-nav-drawer" id="mobile-nav-drawer" aria-hidden="true">
+      <ul class="mobile-nav-links">
+        <li><a href="index.html#sequence" class="mobile-nav-link">Boot Sequence</a></li>
+        <li><a href="index.html#platform" class="mobile-nav-link">Platform</a></li>
+        <li><a href="index.html#creator" class="mobile-nav-link">Creator</a></li>
+        <li><a href="index.html#pricing" class="mobile-nav-link">Pricing</a></li>
+        <li><a href="index.html" class="mobile-nav-link">← Back to Home</a></li>
+      </ul>
+    </div>
   </div>
 
-  <main class="container" style="padding-top: 10rem; padding-bottom: 6rem;">
-    <div style="background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: var(--radius-panel); padding: 4rem 3.5rem; box-shadow: 0 35px 80px rgba(0,0,0,0.8); max-width: 900px; margin: 0 auto;">
+  <main class="container privacy-main">
+    <div class="responsive-panel privacy-panel">
       
       <div class="eyebrow-stacked" style="margin-bottom: 0.75rem;">
         <span class="word-bold">LEGAL &</span>
@@ -111,11 +136,12 @@
 
       </div>
 
-      <div style="margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
+      <div class="footer-bottom-wrap" style="margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--glass-border);">
         <span style="font-size: 0.85rem; color: var(--text-muted);">© 2026 BootForge Systems Inc. Built by Vignesh Guruswamy.</span>
         <a href="index.html" class="neu-pill-btn" style="padding: 0.6rem 1.4rem; font-size: 0.85rem;">Return Home</a>
       </div>
     </div>
   </main>
+  <script src="main.js"></script>
 </body>
 </html>

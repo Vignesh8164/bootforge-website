@@ -41,11 +41,18 @@ html {
   background-color: var(--bg-deep);
   color: var(--text-primary);
   overflow-x: hidden;
+  width: 100%;
 }
 
 body {
   min-height: 100vh;
   position: relative;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+img, svg, video, select, button, input {
+  max-width: 100%;
 }
 
 /* 1. Crimson Red Ambient Gradient Orbs Background */
@@ -802,31 +809,590 @@ footer {
   color: var(--red-signal);
 }
 
-.footer-bottom {
+.footer-bottom, .footer-bottom-wrap {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
   padding-top: 2rem;
   border-top: 1px solid rgba(255,255,255,0.06);
   font-size: 0.85rem;
   color: var(--text-muted);
 }
 
-/* Responsive Media Queries */
-@media (max-width: 1024px) {
-  .glass-hero-panel { grid-template-columns: 1fr; }
-  .platform-grid { grid-template-columns: 1fr 1fr; }
-  .boot-sim-panel { grid-template-columns: 1fr; }
-  .process-flow-grid { grid-template-columns: 1fr 1fr; }
-  .process-line { display: none; }
-  .hero-headline-multiline { font-size: 3rem; }
-  .footer-grid { grid-template-columns: 1fr 1fr; }
+/* ==========================================================================
+   RESPONSIVE DESIGN SYSTEM — UTILITY CLASSES & FLUID LAYOUTS
+   ========================================================================== */
+
+/* Mobile Hamburger Toggle Button */
+.mobile-hamburger {
+  display: none;
+  background: var(--bg-neu-base);
+  border: 1px solid rgba(227, 38, 54, 0.4);
+  z-index: 101;
+  min-width: 42px;
+  min-height: 42px;
 }
 
-@media (max-width: 640px) {
-  .nav-links { display: none; }
-  .platform-grid { grid-template-columns: 1fr; }
-  .process-flow-grid { grid-template-columns: 1fr; }
-  .hero-headline-multiline { font-size: 2.3rem; }
-  .footer-grid { grid-template-columns: 1fr; }
+/* Mobile Glass Navigation Drawer */
+.mobile-nav-drawer {
+  position: fixed;
+  top: calc(1.5rem + 54px);
+  left: 1rem;
+  right: 1rem;
+  background: rgba(14, 14, 16, 0.95);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(227, 38, 54, 0.25);
+  transform: translateY(-20px) scale(0.95);
+  opacity: 0;
+  pointer-events: none;
+  transition: var(--transition);
+  z-index: 99;
+}
+
+.mobile-nav-drawer.open {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mobile-nav-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.mobile-nav-link {
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  display: block;
+  transition: var(--transition);
+}
+
+.mobile-nav-link:hover, .mobile-nav-link:focus {
+  background: rgba(227, 38, 54, 0.15);
+  color: #FFF;
+  border-left: 3px solid var(--red-signal);
+  padding-left: 1.25rem;
+}
+
+.mobile-drawer-cta {
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--glass-border);
+}
+
+.mobile-cta-btn {
+  width: 100%;
+  justify-content: center;
+}
+
+/* Responsive Panel Base */
+.responsive-panel {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-panel);
+  padding: clamp(1.75rem, 5vw, 3.5rem) clamp(1.25rem, 4vw, 3rem);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8);
+  width: 100%;
+}
+
+/* Grid wrappers with responsive columns */
+.apk-grid-wrap {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: center;
+}
+
+.calc-grid-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+}
+
+.creator-grid-wrap {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: center;
+}
+
+.pricing-card-wrap {
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.pricing-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.paypal-accepted-badge {
+  background: #0070BA;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill);
+  color: #FFF;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.price-val {
+  font-size: clamp(2.8rem, 6vw, 4rem);
+  font-weight: 800;
+  font-family: var(--font-mono);
+  margin: 1.25rem 0 0.5rem 0;
+  color: var(--red-signal);
+}
+
+.price-period {
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.paypal-btn-full {
+  width: 100%;
+  justify-content: center;
+  background: #0070BA;
+  border-color: #005EA6;
+  box-shadow: 0 0 25px rgba(0, 112, 186, 0.5);
+  font-size: clamp(0.95rem, 2.2vw, 1.05rem);
+  padding: 1.15rem 1.5rem;
+  min-height: 48px;
+}
+
+.calc-select {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  background: #0E0E10;
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  color: #FFF;
+  font-family: var(--font-mono);
+  font-size: clamp(0.78rem, 1.8vw, 0.9rem);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.calc-result-box {
+  background: #08080A;
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: clamp(1.75rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.calc-time-val {
+  font-size: clamp(2.2rem, 6vw, 3.6rem);
+  font-weight: 800;
+  color: var(--red-signal);
+  font-family: var(--font-mono);
+  margin: 0.85rem 0;
+  text-shadow: 0 0 30px rgba(227, 38, 54, 0.4);
+}
+
+.apk-meta-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  margin-top: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.apk-detail-title {
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 800;
+  color: #FFF;
+  margin-bottom: 1rem;
+}
+
+.apk-detail-body {
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  color: var(--text-secondary);
+  font-weight: 300;
+  line-height: 1.7;
+  margin-bottom: 1.75rem;
+}
+
+.feature-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.chip-item {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-border);
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-pill);
+  font-size: clamp(0.75rem, 1.8vw, 0.82rem);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.responsive-hash {
+  background: #0E0E12;
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-top: 2rem;
+  font-family: var(--font-mono);
+  font-size: clamp(0.7rem, 1.6vw, 0.78rem);
+  color: var(--text-secondary);
+}
+
+.hash-text-wrap {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  max-width: 100%;
+}
+
+.creator-badge {
+  position: absolute;
+  bottom: -1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(18, 18, 20, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--red-signal);
+  padding: 0.4rem 1.2rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: clamp(0.7rem, 1.6vw, 0.78rem);
+  white-space: nowrap;
+  color: #FFF;
+  box-shadow: 0 0 15px rgba(227, 38, 54, 0.4);
+}
+
+.creator-name {
+  font-size: clamp(1.8rem, 4.5vw, 2.5rem);
+  font-weight: 800;
+  color: #FFF;
+  margin-bottom: 0.4rem;
+}
+
+.creator-bio {
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  color: var(--text-secondary);
+  font-weight: 300;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+.creator-github-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 100%;
+}
+
+.privacy-main {
+  padding-top: clamp(7rem, 12vw, 10rem);
+  padding-bottom: 6rem;
+}
+
+.privacy-panel {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.term-body {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* ==========================================================================
+   BREAKPOINTS ARCHITECTURE (320px - 1920px)
+   ========================================================================== */
+
+/* 1. Laptops & Small Desktops (<= 1280px) */
+@media (max-width: 1280px) {
+  .container {
+    max-width: 1100px;
+  }
+}
+
+/* 2. Tablets & Small Laptops (<= 1024px) */
+@media (max-width: 1024px) {
+  .glass-hero-panel {
+    grid-template-columns: 1fr;
+    padding: clamp(2.5rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 2.5rem);
+    gap: 2.5rem;
+  }
+
+  .hero-meta-top {
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .hero-content {
+    margin-top: 0;
+  }
+
+  .apk-grid-wrap {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .calc-grid-wrap {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .creator-grid-wrap {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .boot-sim-panel {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .platform-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .process-flow-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .process-line {
+    display: none;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+}
+
+/* 3. Mid-size Tablets & Large Phones (<= 768px) */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+
+  .mobile-hamburger {
+    display: flex;
+  }
+
+  .glass-nav {
+    padding: 0.65rem 1.25rem;
+  }
+
+  .privacy-back-btn {
+    display: none;
+  }
+
+  .hero-section {
+    min-height: auto;
+    padding-top: 6.5rem;
+    padding-bottom: 3rem;
+  }
+
+  .section-spacer {
+    padding: 4rem 0;
+  }
+
+  .section-title-wrap {
+    margin-bottom: 2.5rem;
+  }
+
+  .big-cta-panel {
+    padding: clamp(2.5rem, 6vw, 4rem) clamp(1.25rem, 4vw, 2rem);
+    margin: 2.5rem 0;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+
+/* 4. Small Tablets & Foldables (<= 600px) */
+@media (max-width: 600px) {
+  .platform-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .process-flow-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-headline-multiline {
+    font-size: clamp(2rem, 7.5vw, 2.8rem);
+  }
+
+  .desktop-br {
+    display: none;
+  }
+
+  .hero-meta-bottom {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* 5. Compact Smartphones (<= 480px) */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 0.85rem;
+  }
+
+  .navbar-wrapper {
+    top: 1rem;
+    padding: 0 0.5rem;
+  }
+
+  .glass-nav {
+    padding: 0.55rem 1rem;
+  }
+
+  .brand {
+    gap: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .brand-icon-neu {
+    width: 32px;
+    height: 32px;
+    font-size: 0.75rem;
+  }
+
+  .neu-pill-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.88rem;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .glass-band {
+    padding: 1rem 1.25rem;
+    gap: 1rem;
+    justify-content: flex-start;
+  }
+
+  .eco-item {
+    font-size: 0.78rem;
+  }
+
+  .terminal-viewport {
+    padding: 1rem;
+    min-height: 360px;
+  }
+
+  .term-body {
+    max-height: 240px;
+    font-size: 0.78rem;
+  }
+
+  .neu-step-item {
+    padding: 1rem 1.1rem;
+    gap: 0.85rem;
+  }
+
+  .pricing-card {
+    padding: 2rem 1.25rem;
+  }
+
+  .hash-copy-box {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hash-copy-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* 6. Ultra-compact Devices (<= 360px) */
+@media (max-width: 360px) {
+  .glass-nav {
+    padding: 0.45rem 0.75rem;
+  }
+
+  .brand span:not(.brand-icon-neu) {
+    font-size: 0.9rem;
+  }
+
+  .hero-headline-multiline {
+    font-size: 1.85rem;
+  }
+
+  .hero-meta-top {
+    font-size: 0.7rem;
+  }
+
+  .hero-tagline-italic {
+    font-size: 0.8rem;
+  }
+
+  .big-num {
+    font-size: 2.2rem;
+  }
+
+  .card-num-head {
+    margin-bottom: 1rem;
+  }
+
+  .glass-card-num {
+    padding: 1.5rem 1.1rem;
+  }
+
+  .creator-badge {
+    font-size: 0.68rem;
+    padding: 0.35rem 0.85rem;
+  }
 }
