@@ -1,0 +1,10 @@
+{
+  "name": "verify-paypal-payment",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/main.js",
+  "dependencies": {
+    "node-appwrite": "*",
+    "pdfkit": "^0.15.0"
+  }
+}

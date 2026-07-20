@@ -1,0 +1,66 @@
+{
+    "projectId": "6a57b885000331609fc8",
+    "endpoint": "https://nyc.cloud.appwrite.io/v1",
+    "functions": [
+        {
+            "$id": "device-check",
+            "name": "device-check",
+            "enabled": true,
+            "logging": true,
+            "runtime": "node-22",
+            "execute": ["users"],
+            "scopes": ["documents.read"],
+            "events": [],
+            "schedule": "",
+            "timeout": 15,
+            "entrypoint": "src/main.js",
+            "commands": "npm install",
+            "path": "functions/device-check"
+        },
+        {
+            "$id": "create-paypal-order",
+            "name": "create-paypal-order",
+            "enabled": true,
+            "logging": true,
+            "runtime": "node-22",
+            "execute": ["users"],
+            "scopes": ["documents.read"],
+            "events": [],
+            "schedule": "",
+            "timeout": 15,
+            "entrypoint": "src/main.js",
+            "commands": "npm install",
+            "path": "functions/create-paypal-order"
+        },
+        {
+            "$id": "verify-paypal-payment",
+            "name": "verify-paypal-payment",
+            "enabled": true,
+            "logging": true,
+            "runtime": "node-22",
+            "execute": ["users"],
+            "scopes": ["documents.read", "documents.write", "users.read"],
+            "events": [],
+            "schedule": "",
+            "timeout": 30,
+            "entrypoint": "src/main.js",
+            "commands": "npm install",
+            "path": "functions/verify-paypal-payment"
+        },
+        {
+            "$id": "activate-license",
+            "name": "activate-license",
+            "enabled": true,
+            "logging": true,
+            "runtime": "node-22",
+            "execute": ["users"],
+            "scopes": ["documents.read", "documents.write"],
+            "events": [],
+            "schedule": "",
+            "timeout": 15,
+            "entrypoint": "src/main.js",
+            "commands": "npm install",
+            "path": "functions/activate-license"
+        }
+    ]
+}
