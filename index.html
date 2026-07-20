@@ -59,22 +59,10 @@
       </ul>
 
       <div class="nav-right-cluster">
-        <button class="neu-btn-circle glow-ring" id="nav-btn-icon" aria-label="Settings">
+        <button class="neu-btn-circle glow-ring" id="nav-btn-icon" aria-label="Toggle Navigation Menu" aria-expanded="false">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"></circle>
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-          </svg>
-        </button>
-
-        <button class="neu-btn-circle mobile-hamburger" id="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
-          <svg class="icon-menu" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-          <svg class="icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
         </button>
       </div>
@@ -383,7 +371,7 @@
             </div>
           </div>
 
-          <!-- Right: Details & SHA-256 Copy Hash -->
+          <!-- Right: Details & Download Package -->
           <div>
             <div class="eyebrow-stacked" style="margin-bottom: 0.5rem;">
               <span class="word-bold">DIRECT</span>
@@ -400,14 +388,6 @@
               <span class="chip-item">⚡ Direct APK Package</span>
               <span class="chip-item">🛡️ 100% Signed & Verified</span>
               <span class="chip-item">📱 Android 8.0 to Android 15</span>
-            </div>
-
-            <!-- SHA-256 Checksum Box -->
-            <div class="hash-copy-box responsive-hash">
-              <div class="hash-text-wrap">
-                <span style="color: var(--red-signal); font-weight: 700;">SHA-256:</span> <span class="hash-val">7C14C3257BD92DADB99A0DEB46C681C27FE355632B84997EAA22E964519F6DEA</span>
-              </div>
-              <button class="hash-copy-btn" id="copy-hash-btn" onclick="copySHA256Hash()">Copy Hash</button>
             </div>
           </div>
         </div>
@@ -611,7 +591,7 @@
           <ul>
             <li><a href="https://github.com/vignesh8164" target="_blank">GitHub (@vignesh8164)</a></li>
             <li><a href="privacy.html">Privacy Policy</a></li>
-            <li><a href="#download">SHA-256 Checksums</a></li>
+            <li><a href="#download">Direct APK Download</a></li>
           </ul>
         </div>
       </div>

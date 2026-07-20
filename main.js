@@ -292,56 +292,29 @@ function initPayPalCheckout() {
   });
 }
 
-/* 6. One-Click Copy SHA-256 Checksum Helper */
-function copySHA256Hash() {
-  const hashText = "7C14C3257BD92DADB99A0DEB46C681C27FE355632B84997EAA22E964519F6DEA";
-  const btn = document.getElementById('copy-hash-btn');
-  
-  navigator.clipboard.writeText(hashText).then(() => {
-    if (btn) {
-      const origText = btn.innerText;
-      btn.innerText = "✓ Copied!";
-      btn.style.background = "#10B981";
-      btn.style.borderColor = "#10B981";
-      
-      setTimeout(() => {
-        btn.innerText = origText;
-        btn.style.background = "";
-        btn.style.borderColor = "";
-      }, 2000);
-    }
-  }).catch(err => {
-    console.error('Failed to copy hash: ', err);
-  });
-}
-
-/* 7. Mobile Navigation Drawer Controller */
+/* 6. Mobile Navigation & Settings Drawer Controller (Single Control Button: Settings Gear) */
 function initMobileMenu() {
-  const toggleBtn = document.getElementById('mobile-menu-toggle');
+  const gearBtn = document.getElementById('nav-btn-icon');
   const drawer = document.getElementById('mobile-nav-drawer');
-  if (!toggleBtn || !drawer) return;
+  if (!gearBtn || !drawer) return;
 
-  const iconMenu = toggleBtn.querySelector('.icon-menu');
-  const iconClose = toggleBtn.querySelector('.icon-close');
   const mobileLinks = drawer.querySelectorAll('.mobile-nav-link, .mobile-cta-btn');
 
   function openMenu() {
     drawer.classList.add('open');
-    toggleBtn.setAttribute('aria-expanded', 'true');
+    gearBtn.classList.add('gear-active');
+    gearBtn.setAttribute('aria-expanded', 'true');
     drawer.setAttribute('aria-hidden', 'false');
-    if (iconMenu) iconMenu.style.display = 'none';
-    if (iconClose) iconClose.style.display = 'block';
   }
 
   function closeMenu() {
     drawer.classList.remove('open');
-    toggleBtn.setAttribute('aria-expanded', 'false');
+    gearBtn.classList.remove('gear-active');
+    gearBtn.setAttribute('aria-expanded', 'false');
     drawer.setAttribute('aria-hidden', 'true');
-    if (iconMenu) iconMenu.style.display = 'block';
-    if (iconClose) iconClose.style.display = 'none';
   }
 
-  toggleBtn.addEventListener('click', (e) => {
+  gearBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     if (drawer.classList.contains('open')) {
       closeMenu();
@@ -357,13 +330,13 @@ function initMobileMenu() {
   });
 
   document.addEventListener('click', (e) => {
-    if (drawer.classList.contains('open') && !drawer.contains(e.target) && !toggleBtn.contains(e.target)) {
+    if (drawer.classList.contains('open') && !drawer.contains(e.target) && !gearBtn.contains(e.target)) {
       closeMenu();
     }
   });
 
   window.addEventListener('resize', () => {
-    if (window.innerWidth > 768 && drawer.classList.contains('open')) {
+    if (window.innerWidth > 1024 && drawer.classList.contains('open')) {
       closeMenu();
     }
   });
