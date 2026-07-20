@@ -383,6 +383,8 @@ function initPayPalCheckout() {
   const successCloseBtn = document.getElementById('success-close-btn');
   const ownedCloseBtn = document.getElementById('owned-close-btn');
 
+  const cancelProcessingBtn = document.getElementById('cancel-processing-btn');
+
   function setNavigationLock(locked) {
     isVerificationActive = locked;
     if (locked) {
@@ -473,6 +475,16 @@ function initPayPalCheckout() {
     switchView('email');
   });
 
+  let activePollInterval = null;
+
+  if (cancelProcessingBtn) {
+    cancelProcessingBtn.addEventListener('click', () => {
+      if (activePollInterval) clearInterval(activePollInterval);
+      setNavigationLock(false);
+      renderFailure('Payment session was cancelled. No charges were made.');
+    });
+  }
+
   if (flowModal) {
     flowModal.addEventListener('click', (e) => {
       if (e.target === flowModal) closeModal();
@@ -516,15 +528,26 @@ function initPayPalCheckout() {
 
         updateProgress(55, 'Awaiting PayPal Approval...', 'Complete Approval in PayPal', 'A pop-up window has been opened for PayPal login.');
 
-        const popup = window.open(data.approveUrl, 'PayPalCheckout', 'width=600,height=700');
+        let popup = null;
+        try {
+          popup = window.open(data.approveUrl, 'PayPalCheckout', 'width=600,height=700');
+        } catch(e) {}
+
+        if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+          // If popup is blocked by browser, redirect current window to approveUrl
+          window.location.href = data.approveUrl;
+          return;
+        }
 
         let isCompleted = false;
         let pollCount = 0;
         
-        const pollInterval = setInterval(async () => {
+        if (activePollInterval) clearInterval(activePollInterval);
+        
+        activePollInterval = setInterval(async () => {
           pollCount++;
-          if (isCompleted || pollCount > 300) {
-            clearInterval(pollInterval);
+          if (isCompleted || pollCount > 120) { // 90 seconds timeout
+            clearInterval(activePollInterval);
             if (!isCompleted) {
               renderFailure('Payment verification timed out. If you completed payment, check your email or refresh.');
             }
@@ -536,7 +559,7 @@ function initPayPalCheckout() {
 
           if (result && result.ok) {
             isCompleted = true;
-            clearInterval(pollInterval);
+            clearInterval(activePollInterval);
             try { if (popup && !popup.closed) popup.close(); } catch(e) {}
 
             updateProgress(100, 'Complete! Loading receipt...');
@@ -545,17 +568,18 @@ function initPayPalCheckout() {
             } else {
               renderSuccessReceipt(result, emailVal);
             }
-          } else if (popup && popup.closed && pollCount > 3) {
+          } else if (popup && popup.closed) {
+            // Check one final time immediately after user closes popup window
+            clearInterval(activePollInterval);
             const finalCheck = await verifyPaymentExecution(data.orderId);
-            clearInterval(pollInterval);
             if (finalCheck && finalCheck.ok) {
               if (finalCheck.alreadyIssued) renderAlreadyOwned(finalCheck, emailVal);
               else renderSuccessReceipt(finalCheck, emailVal);
             } else {
-              renderFailure('PayPal checkout was closed or cancelled before completion. No charges were made.');
+              renderFailure('PayPal checkout window was closed before completion. No charges were made.');
             }
           }
-        }, 750);
+        }, 800);
 
       } catch (err) {
         submitBtn.disabled = false;

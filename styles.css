@@ -218,6 +218,78 @@ h1, h2, h3, h4 {
 }
 
 /* 4. Soft Neumorphic Controls & Buttons */
+.neu-pill-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.75rem !important;
+  padding: 0.9rem 1.75rem !important;
+  border-radius: 50px !important;
+  background: linear-gradient(135deg, #E32636 0%, #B01B28 100%) !important;
+  color: #FFFFFF !important;
+  font-family: var(--font-main) !important;
+  font-size: 0.98rem !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 6px 25px rgba(227, 38, 54, 0.45), 0 0 15px rgba(227, 38, 54, 0.3) !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  outline: none !important;
+}
+
+.neu-pill-btn:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  background: linear-gradient(135deg, #FF2E43 0%, #C91E2D 100%) !important;
+  box-shadow: 0 10px 35px rgba(227, 38, 54, 0.65), 0 0 25px rgba(255, 255, 255, 0.4) !important;
+  border-color: #FFFFFF !important;
+  color: #FFFFFF !important;
+}
+
+.neu-pill-btn:active {
+  transform: translateY(1px) scale(0.98) !important;
+  box-shadow: 0 2px 10px rgba(227, 38, 54, 0.4) !important;
+}
+
+.neu-pill-btn:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+.paypal-btn-full {
+  width: 100% !important;
+  margin-top: 1.5rem !important;
+  padding: 1.1rem 2rem !important;
+  font-size: 1.05rem !important;
+}
+
+.modal-submit-btn {
+  width: 100% !important;
+  margin-top: 1rem !important;
+  padding: 1rem 1.75rem !important;
+  font-size: 1rem !important;
+}
+
+.cancel-processing-btn {
+  background: transparent !important;
+  border: 1px dashed rgba(255, 255, 255, 0.2) !important;
+  color: var(--text-secondary) !important;
+  padding: 0.6rem 1.25rem !important;
+  font-size: 0.85rem !important;
+  border-radius: 20px !important;
+  margin: 1.25rem auto 0 auto !important;
+  display: block !important;
+  cursor: pointer !important;
+  transition: var(--transition) !important;
+}
+
+.cancel-processing-btn:hover {
+  border-color: var(--red-signal) !important;
+  color: var(--red-signal) !important;
+  background: rgba(227, 38, 54, 0.1) !important;
+}
+
 .neu-btn-circle {
   width: 42px;
   height: 42px;
