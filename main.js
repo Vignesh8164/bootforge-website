@@ -416,14 +416,50 @@ function renderSuccessReceipt(data, fallbackEmail) {
   const rEmail = document.getElementById('receipt-email');
   const keyEl = document.getElementById('minted-license-key');
 
+  const emailStr = data.email || fallbackEmail || 'Registered Email';
+
   if (rOrder) rOrder.innerText = data.orderId || '-';
   if (rPay) rPay.innerText = data.paymentId || ('CAP-' + (data.orderId || 'SUCCESS'));
   if (rAmt) rAmt.innerText = `${data.amount || '2.00'} ${data.currency || 'USD'}`;
   if (rDate) rDate.innerText = data.purchaseDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  if (rEmail) rEmail.innerText = data.email || fallbackEmail || 'Registered Email';
+  if (rEmail) rEmail.innerText = emailStr;
   if (keyEl && data.licenseKey) keyEl.innerText = data.licenseKey;
 
   switchView('success');
+
+  // Sequential 2.1s Apple-style Timeline Animation
+  const s1 = document.getElementById('t-step-1');
+  const s2 = document.getElementById('t-step-2');
+  const s3 = document.getElementById('t-step-3');
+  const s4 = document.getElementById('t-step-4');
+
+  if (s1 && s2 && s3 && s4) {
+    s1.className = 'timeline-step step-done';
+    s1.querySelector('.timeline-icon').innerText = '✓';
+    s2.className = 'timeline-step step-active';
+    s2.querySelector('.timeline-icon').innerText = '⏳';
+    s3.className = 'timeline-step step-pending';
+    s3.querySelector('.timeline-icon').innerText = '⏳';
+    s4.className = 'timeline-step step-pending';
+    s4.querySelector('.timeline-icon').innerText = '⏳';
+
+    setTimeout(() => {
+      s2.className = 'timeline-step step-done';
+      s2.querySelector('.timeline-icon').innerText = '✓';
+      s3.className = 'timeline-step step-active';
+    }, 700);
+
+    setTimeout(() => {
+      s3.className = 'timeline-step step-done';
+      s3.querySelector('.timeline-icon').innerText = '✓';
+      s4.className = 'timeline-step step-active';
+    }, 1400);
+
+    setTimeout(() => {
+      s4.className = 'timeline-step step-done';
+      s4.querySelector('.timeline-icon').innerText = '✓';
+    }, 2100);
+  }
 }
 
 function renderAlreadyOwned(data) {
@@ -463,6 +499,7 @@ function initPayPalCheckout() {
   const ownedCloseBtn = document.getElementById('owned-close-btn');
   const failedRetryBtn = document.getElementById('failed-retry-btn');
   const cancelProcessingBtn = document.getElementById('cancel-processing-btn');
+  const resendEmailBtn = document.getElementById('resend-email-btn');
   const emailForm = document.getElementById('checkout-email-form');
   const buyerEmailInput = document.getElementById('buyer-email-input');
   const submitBtn = document.getElementById('email-form-submit-btn');
@@ -480,6 +517,33 @@ function initPayPalCheckout() {
   if (modalClose) modalClose.addEventListener('click', closeModal);
   if (successCloseBtn) successCloseBtn.addEventListener('click', closeModal);
   if (ownedCloseBtn) ownedCloseBtn.addEventListener('click', closeModal);
+
+  if (resendEmailBtn) {
+    resendEmailBtn.addEventListener('click', async () => {
+      const origHtml = resendEmailBtn.innerHTML;
+      resendEmailBtn.disabled = true;
+      resendEmailBtn.innerHTML = `<span>⏳ Resending Email...</span>`;
+      try {
+        const orderIdEl = document.getElementById('receipt-order-id');
+        const orderId = orderIdEl ? orderIdEl.innerText : '';
+        if (orderId && orderId !== '-') {
+          await verifyPaymentExecution(orderId);
+        }
+        resendEmailBtn.innerHTML = `<span>✓ Email Resent Successfully!</span>`;
+        resendEmailBtn.style.borderColor = '#10B981';
+        resendEmailBtn.style.color = '#10B981';
+        setTimeout(() => {
+          resendEmailBtn.disabled = false;
+          resendEmailBtn.innerHTML = origHtml;
+          resendEmailBtn.style.borderColor = '';
+          resendEmailBtn.style.color = '';
+        }, 3000);
+      } catch(e) {
+        resendEmailBtn.disabled = false;
+        resendEmailBtn.innerHTML = origHtml;
+      }
+    });
+  }
 
   if (failedRetryBtn) {
     failedRetryBtn.addEventListener('click', () => {

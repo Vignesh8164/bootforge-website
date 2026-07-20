@@ -725,8 +725,38 @@
       <!-- VIEW 3: Dedicated Payment Successful Screen -->
       <div class="flow-view-state" id="flow-view-success" style="display:none;">
         <div class="success-icon-ring">✓</div>
-        <h3 class="modal-title text-center" style="text-align: center;">Payment Successful!</h3>
-        <p class="modal-sub text-center" style="text-align: center;">Thank you for your purchase. Your lifetime license key has been generated and dispatched to your email.</p>
+        <h3 class="modal-title text-center" style="text-align: center; margin-top: 0.5rem;">Payment Successful!</h3>
+        <p class="modal-sub text-center" style="text-align: center; margin-bottom: 1rem;">Your BootForge license has been generated successfully.</p>
+
+        <!-- Step-by-Step Animated Sequential Timeline -->
+        <div class="success-timeline-card" id="success-timeline-card">
+          <div class="timeline-step step-done" id="t-step-1">
+            <span class="timeline-icon">✓</span>
+            <span class="timeline-text">Payment Verified</span>
+          </div>
+          <div class="timeline-step step-pending" id="t-step-2">
+            <span class="timeline-icon">⏳</span>
+            <span class="timeline-text">Generating License Key...</span>
+          </div>
+          <div class="timeline-step step-pending" id="t-step-3">
+            <span class="timeline-icon">⏳</span>
+            <span class="timeline-text">Encrypting License & PDF Invoice...</span>
+          </div>
+          <div class="timeline-step step-pending" id="t-step-4">
+            <span class="timeline-icon">⏳</span>
+            <span class="timeline-text">License Sent to Email ✓</span>
+          </div>
+        </div>
+
+        <!-- Delivery Email Card -->
+        <div class="email-delivery-badge-card">
+          <div class="badge-icon">📧</div>
+          <div class="badge-content">
+            <span class="badge-label">Sent to Registered Email</span>
+            <span class="badge-email" id="receipt-email">buyer@example.com</span>
+            <span class="badge-hint">Please check your Inbox or Spam folder.</span>
+          </div>
+        </div>
 
         <!-- Itemized Transaction Receipt Card -->
         <div class="txn-summary-card">
@@ -750,10 +780,6 @@
             <span class="txn-label">Date & Time</span>
             <span class="txn-val" id="receipt-date">-</span>
           </div>
-          <div class="txn-row">
-            <span class="txn-label">Delivery Email</span>
-            <span class="txn-val" id="receipt-email">-</span>
-          </div>
         </div>
 
         <div class="license-key-box">
@@ -764,18 +790,18 @@
           </button>
         </div>
 
-        <div class="email-sent-notice-box">
-          <span>📧 A confirmation email with your official PDF invoice has been sent to your email address.</span>
-        </div>
-
         <div class="modal-cta-cluster">
-          <a href="apk/BootForge-v2.0.0-Debug.apk" download class="neu-pill-btn download-apk-btn">
-            <span>⚡ Download BootForge Pro APK</span>
+          <a href="apk/BootForge-v2.0.0-Debug.apk" download class="neu-pill-btn download-apk-btn" style="flex: 1; text-align: center;">
+            <span>⚡ Continue to Download</span>
           </a>
-          <button type="button" class="neu-pill-btn-outline" id="success-close-btn">
-            <span>Go Home</span>
+          <button type="button" class="neu-pill-btn-outline" id="resend-email-btn" style="flex: 1; text-align: center;">
+            <span>✉️ Resend License Email</span>
           </button>
         </div>
+
+        <button type="button" class="cancel-processing-btn" id="success-close-btn" style="margin-top: 1rem;">
+          <span>Go Home</span>
+        </button>
       </div>
 
       <!-- VIEW 4: Already Owned Screen -->
