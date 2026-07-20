@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initBootSimulator();
   initGlassParallax();
   initDiagnosticsCalculator();
+  initAppwriteSDK();
   initPayPalCheckout();
 });
 
@@ -274,22 +275,224 @@ function initDiagnosticsCalculator() {
   calculateTime();
 }
 
-/* 5. PayPal Checkout Interaction Handler */
-function initPayPalCheckout() {
-  const btn = document.getElementById('paypal-checkout-btn');
-  if (!btn) return;
+/* 5. Appwrite Cloud & PayPal Checkout Controller */
+const APPWRITE_ENDPOINT = 'https://nyc.cloud.appwrite.io/v1';
+const APPWRITE_PROJECT_ID = '6a57b885000331609fc8';
+const APPWRITE_DATABASE_ID = '6a57b90f0010645478da';
+const FN_CREATE_PAYPAL_ORDER = 'create-paypal-order';
+const FN_VERIFY_PAYPAL_PAYMENT = 'verify-paypal-payment';
 
-  btn.addEventListener('click', () => {
-    const origText = btn.innerHTML;
-    btn.style.opacity = '0.7';
-    btn.innerHTML = `<span>Redirecting to PayPal ($2.00 USD)...</span>`;
-    
-    setTimeout(() => {
-      alert("Redirecting to PayPal Checkout ($2.00 USD) for BootForge Pro License...");
-      btn.style.opacity = '1';
-      btn.innerHTML = origText;
-    }, 800);
+let appwriteClient = null;
+let appwriteAccount = null;
+let appwriteFunctions = null;
+let appwriteDatabases = null;
+
+function initAppwriteSDK() {
+  if (typeof Appwrite === 'undefined') {
+    console.warn('Appwrite Web SDK not loaded');
+    return;
+  }
+  try {
+    appwriteClient = new Appwrite.Client()
+      .setEndpoint(APPWRITE_ENDPOINT)
+      .setProject(APPWRITE_PROJECT_ID);
+
+    appwriteAccount = new Appwrite.Account(appwriteClient);
+    appwriteFunctions = new Appwrite.Functions(appwriteClient);
+    appwriteDatabases = new Appwrite.Databases(appwriteClient);
+
+    syncRemotePricing();
+    checkPayPalReturnParams();
+  } catch (err) {
+    console.error('Appwrite init error:', err);
+  }
+}
+
+async function syncRemotePricing() {
+  if (!appwriteDatabases) return;
+  try {
+    const offer = await appwriteDatabases.getDocument(APPWRITE_DATABASE_ID, 'config', 'offer');
+    if (offer && offer.futurePrice) {
+      const formattedPrice = `$${Number(offer.futurePrice).toFixed(2)} ${offer.currency || 'USD'}`;
+      const priceEls = document.querySelectorAll('.card-price');
+      priceEls.forEach(el => {
+        el.innerHTML = `${formattedPrice} <span style="font-size:1rem; font-weight:400; color:var(--text-secondary);">/ Lifetime</span>`;
+      });
+    }
+  } catch (e) {
+    console.log('Using default pricing display');
+  }
+}
+
+async function ensureAppwriteSession() {
+  if (!appwriteAccount) throw new Error('Appwrite SDK unavailable');
+  try {
+    return await appwriteAccount.get();
+  } catch (e) {
+    return await appwriteAccount.createAnonymousSession();
+  }
+}
+
+function initPayPalCheckout() {
+  const buyBtn = document.getElementById('paypal-checkout-btn');
+  const emailModal = document.getElementById('checkout-email-modal');
+  const emailModalClose = document.getElementById('email-modal-close');
+  const emailForm = document.getElementById('checkout-email-form');
+  const buyerEmailInput = document.getElementById('buyer-email-input');
+  const submitBtn = document.getElementById('email-form-submit-btn');
+
+  const successModal = document.getElementById('checkout-success-modal');
+  const successModalClose = document.getElementById('success-modal-close');
+  const mintedKeyEl = document.getElementById('minted-license-key');
+  const copyKeyBtn = document.getElementById('copy-license-key-btn');
+
+  if (!buyBtn || !emailModal) return;
+
+  function openEmailModal() {
+    emailModal.classList.add('open');
+    emailModal.setAttribute('aria-hidden', 'false');
+    if (buyerEmailInput) buyerEmailInput.focus();
+  }
+
+  function closeEmailModal() {
+    emailModal.classList.remove('open');
+    emailModal.setAttribute('aria-hidden', 'true');
+  }
+
+  function openSuccessModal(key) {
+    if (mintedKeyEl && key) mintedKeyEl.innerText = key;
+    successModal.classList.add('open');
+    successModal.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeSuccessModal() {
+    successModal.classList.remove('open');
+    successModal.setAttribute('aria-hidden', 'true');
+  }
+
+  buyBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    openEmailModal();
   });
+
+  if (emailModalClose) emailModalClose.addEventListener('click', closeEmailModal);
+  if (successModalClose) successModalClose.addEventListener('click', closeSuccessModal);
+
+  emailModal.addEventListener('click', (e) => {
+    if (e.target === emailModal) closeEmailModal();
+  });
+  successModal.addEventListener('click', (e) => {
+    if (e.target === successModal) closeSuccessModal();
+  });
+
+  if (emailForm) {
+    emailForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const emailVal = buyerEmailInput ? buyerEmailInput.value.trim() : '';
+      if (!emailVal) return;
+
+      const origBtnHtml = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span>Opening PayPal Order...</span>`;
+
+      try {
+        await ensureAppwriteSession();
+
+        const exec = await appwriteFunctions.createExecution(
+          FN_CREATE_PAYPAL_ORDER,
+          JSON.stringify({ email: emailVal })
+        );
+
+        let data = {};
+        try { data = JSON.parse(exec.responseBody || '{}'); } catch(err) {}
+
+        if (!data.ok || !data.approveUrl) {
+          throw new Error(data.error || 'Could not start PayPal checkout.');
+        }
+
+        closeEmailModal();
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = origBtnHtml;
+
+        const popup = window.open(data.approveUrl, 'PayPalCheckout', 'width=600,height=700');
+        if (!popup || popup.closed) {
+          window.location.href = data.approveUrl;
+          return;
+        }
+
+        let pollCount = 0;
+        const pollInterval = setInterval(async () => {
+          pollCount++;
+          if (popup.closed || pollCount > 120) {
+            clearInterval(pollInterval);
+            await verifyAndDeliverLicense(data.orderId, openSuccessModal);
+          }
+        }, 2500);
+
+      } catch (err) {
+        alert(err.message || 'PayPal Checkout failed. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = origBtnHtml;
+      }
+    });
+  }
+
+  if (copyKeyBtn && mintedKeyEl) {
+    copyKeyBtn.addEventListener('click', () => {
+      const key = mintedKeyEl.innerText;
+      navigator.clipboard.writeText(key).then(() => {
+        const origText = copyKeyBtn.innerHTML;
+        copyKeyBtn.innerHTML = `<span>✓ Copied to Clipboard!</span>`;
+        copyKeyBtn.style.background = '#10B981';
+        copyKeyBtn.style.borderColor = '#10B981';
+        setTimeout(() => {
+          copyKeyBtn.innerHTML = origText;
+          copyKeyBtn.style.background = '';
+          copyKeyBtn.style.borderColor = '';
+        }, 2000);
+      });
+    });
+  }
+}
+
+async function verifyAndDeliverLicense(orderId, successCallback) {
+  if (!appwriteFunctions || !orderId) return;
+  try {
+    const exec = await appwriteFunctions.createExecution(
+      FN_VERIFY_PAYPAL_PAYMENT,
+      JSON.stringify({ orderId: orderId })
+    );
+    let data = {};
+    try { data = JSON.parse(exec.responseBody || '{}'); } catch(e) {}
+
+    if (data.ok && (data.licenseKey || data.alreadyIssued)) {
+      const key = data.licenseKey || 'BOOTFORGE-PRO-ACTIVE';
+      if (successCallback) successCallback(key);
+    }
+  } catch (err) {
+    console.error('Verification error:', err);
+  }
+}
+
+async function checkPayPalReturnParams() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token') || urlParams.get('orderId');
+  if (token && appwriteFunctions) {
+    try {
+      await ensureAppwriteSession();
+      await verifyAndDeliverLicense(token, (key) => {
+        const successModal = document.getElementById('checkout-success-modal');
+        const mintedKeyEl = document.getElementById('minted-license-key');
+        if (mintedKeyEl && key) mintedKeyEl.innerText = key;
+        if (successModal) {
+          successModal.classList.add('open');
+          successModal.setAttribute('aria-hidden', 'false');
+        }
+      });
+    } catch (e) {
+      console.error('Auto verify on return error:', e);
+    }
+  }
 }
 
 /* 6. Navigation & Settings Drawer Controller (Single Control Button: Settings Gear) */

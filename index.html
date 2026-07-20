@@ -33,6 +33,9 @@
   <!-- GSAP & ScrollTrigger CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  
+  <!-- Appwrite Web SDK CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.1"></script>
 </head>
 <body>
   <!-- Crimson Red Ambient Gradient Orbs Background -->
@@ -604,7 +607,56 @@
         </div>
       </div>
     </div>
-  </footer>
+  <!-- Checkout Email Entry Modal -->
+  <div class="glass-modal-overlay" id="checkout-email-modal" aria-hidden="true" style="display:none;">
+    <div class="glass-modal-card">
+      <button class="glass-modal-close" id="email-modal-close" type="button" aria-label="Close modal">&times;</button>
+      <div class="eyebrow-stacked" style="margin-bottom: 0.5rem;">
+        <span class="word-bold">BOOTFORGE</span>
+        <span class="word-light">PRO LICENSE</span>
+      </div>
+      <h3 class="modal-title">License Delivery Email</h3>
+      <p class="modal-sub">Enter your email address to receive your lifetime license key immediately after PayPal payment verification.</p>
+
+      <form id="checkout-email-form">
+        <div class="input-group">
+          <label for="buyer-email-input">Email Address</label>
+          <input type="email" id="buyer-email-input" class="neu-input" placeholder="name@example.com" required />
+        </div>
+        <button type="submit" class="neu-pill-btn modal-submit-btn" id="email-form-submit-btn">
+          <span>Proceed to PayPal Checkout →</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Checkout Success & License Key Delivery Modal -->
+  <div class="glass-modal-overlay" id="checkout-success-modal" aria-hidden="true" style="display:none;">
+    <div class="glass-modal-card success-card">
+      <button class="glass-modal-close" id="success-modal-close" type="button" aria-label="Close modal">&times;</button>
+      <div class="success-icon-ring">✓</div>
+      <div class="eyebrow-stacked" style="margin-bottom: 0.5rem; text-align: center;">
+        <span class="word-bold">PAYMENT</span>
+        <span class="word-light">VERIFIED</span>
+      </div>
+      <h3 class="modal-title" style="text-align: center;">BootForge Pro License Issued!</h3>
+      <p class="modal-sub" style="text-align: center;">Your lifetime license key is active. Use this key in the BootForge Android app to activate Pro features.</p>
+
+      <div class="license-key-box">
+        <span class="license-key-label">LIFETIME LICENSE KEY</span>
+        <div class="license-key-display" id="minted-license-key">BOOTFORGE-XXXX-XXXX-XXXX-XXXX</div>
+        <button type="button" class="neu-pill-btn copy-key-btn" id="copy-license-key-btn">
+          <span>📋 Copy License Key</span>
+        </button>
+      </div>
+
+      <div class="modal-download-cta">
+        <a href="apk/BootForge-v2.0.0-Debug.apk" download class="neu-pill-btn download-apk-btn">
+          <span>⚡ Download BootForge Pro APK</span>
+        </a>
+      </div>
+    </div>
+  </div>
 
   <script src="main.js"></script>
 </body>
