@@ -66,6 +66,10 @@ async function handle({ req, res, log, error }) {
 
   const returnUrl = payload.returnUrl || RETURN_URL;
   const cancelUrl = payload.cancelUrl || CANCEL_URL;
+  // Optional: pre-fill PayPal's login screen when the caller already knows
+  // the buyer's email (e.g. an authenticated Appwrite session). Anonymous
+  // web checkouts simply omit this — PayPal collects the email itself.
+  const knownEmail = typeof payload.email === 'string' && payload.email.includes('@') ? payload.email : null;
 
   let offer;
   try {
@@ -92,11 +96,15 @@ async function handle({ req, res, log, error }) {
     ],
     application_context: {
       brand_name: 'BootForge',
+      // Sends the buyer straight into the PayPal login screen (step 2 of the
+      // checkout flow) instead of an intermediate PayPal landing/guest page.
+      landing_page: 'LOGIN',
       user_action: 'PAY_NOW',
       shipping_preference: 'NO_SHIPPING',
       return_url: returnUrl,
       cancel_url: cancelUrl,
     },
+    ...(knownEmail ? { payer: { email_address: knownEmail } } : {}),
   };
 
   const r = await fetch(`${paypalBase()}/v2/checkout/orders`, {

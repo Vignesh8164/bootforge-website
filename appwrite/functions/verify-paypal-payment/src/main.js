@@ -216,6 +216,20 @@ function buildConfirmationHtml(invoiceData, licenseKey) {
 </html>`;
 }
 
+/** sendLicenseEmail with a couple of retries — Resend calls are a network hop
+ *  and the single failure mode worth absorbing here is a transient blip. */
+async function sendLicenseEmailWithRetry(invoiceData, licenseKey, pdfBuffer, log, error, attempts = 2) {
+  for (let i = 1; i <= attempts; i++) {
+    const ok = await sendLicenseEmail(invoiceData, licenseKey, pdfBuffer, log, error);
+    if (ok) return true;
+    if (i < attempts) {
+      log(`email send attempt ${i} failed for ${invoiceData.customerEmail} — retrying`);
+      await new Promise((r) => setTimeout(r, 700));
+    }
+  }
+  return false;
+}
+
 /** Dispatches HTML Email & PDF Invoice via Resend REST API */
 async function sendLicenseEmail(invoiceData, licenseKey, pdfBuffer, log, error) {
   const apiKey = process.env.RESEND_API_KEY;
@@ -319,6 +333,11 @@ async function handle({ req, res, log, error }) {
     return res.json({ ok: false, error: 'Invalid order.' });
   }
 
+  // PayPal echoes the buyer's PayPal account email back on the order once
+  // they've approved it — this is authoritative for "the same email address
+  // used during checkout" and needs no separate email-collection step.
+  const payerEmail = order.payer?.email_address || null;
+
   const orderOwner = order.purchase_units?.[0]?.custom_id;
   if (orderOwner && orderOwner !== userId) {
     log(`order ${orderId} custom_id=${orderOwner} caller=${userId} — allowing cross-session verification`);
@@ -389,21 +408,29 @@ async function handle({ req, res, log, error }) {
     }
   }
 
-  let email = null;
-  let name = '';
-  try {
-    const u = await users.get(userId);
-    email = u.email || null;
-    name = u.name || '';
-  } catch (e) {
-    error(`users.get failed: ${e.message}`);
+  // "The same email address used during checkout": PayPal's own payer email
+  // is authoritative — it's exactly the account the buyer just paid with.
+  // users.get() is only a fallback for authenticated sessions where PayPal
+  // did not echo a payer email back (defensive; normally it always does).
+  let email = payerEmail;
+  let name = order.payer?.name?.given_name || '';
+  if (!email) {
+    try {
+      const u = await users.get(userId);
+      email = u.email || null;
+      name = name || u.name || '';
+    } catch (e) {
+      error(`users.get fallback failed: ${e.message}`);
+    }
+  }
+  if (!email) {
+    error(`no email available for order ${orderId} — payer.email_address missing and no Appwrite user email`);
   }
 
   if (alreadyProcessed) {
-    let hasLicense = false;
+    let lic = null;
     try {
-      const lic = await db.getDocument(DB, LICENSES, userId);
-      hasLicense = Boolean(lic.licenseKeyHash);
+      lic = await db.getDocument(DB, LICENSES, userId);
     } catch (e) {
       if (e?.code !== 404) {
         error(`license lookup failed for ${userId}: ${e.message}`);
@@ -413,13 +440,72 @@ async function handle({ req, res, log, error }) {
         });
       }
     }
-    if (hasLicense) {
-      log(`capture ${captureId} re-confirmed for ${userId} (idempotent replay, skipping email/invoice)`);
+    if (lic && lic.licenseKeyHash) {
+      const licEmail = email || lic.email;
+
+      if (lic.emailSent) {
+        log(`capture ${captureId} re-confirmed for ${userId} (idempotent replay, already emailed)`);
+        return res.json({
+          ok: true,
+          alreadyIssued: true,
+          licenseKey: lic.licenseKey || null,
+          email: licEmail,
+          emailed: true,
+          error: null,
+        });
+      }
+
+      // Payment + license were already finalized on a prior attempt, but the
+      // email never confirmed delivery. This replay — a page reload, the
+      // "Resend Email" action, or the frontend's own retry loop — is exactly
+      // where that delivery gets retried, using the same stored license key.
+      log(`capture ${captureId} re-confirmed for ${userId} — email not yet delivered, retrying send`);
+      if (!lic.licenseKey || !licEmail) {
+        return res.json({
+          ok: true,
+          alreadyIssued: true,
+          licenseKey: lic.licenseKey || null,
+          email: licEmail,
+          emailed: false,
+          error: 'License is issued but no delivery email is on file.',
+        });
+      }
+
+      const resendInvoiceData = {
+        invoiceNumber: `BF-2026-${String(Date.now()).slice(-6)}`,
+        orderId,
+        paymentId: captureId,
+        userId,
+        customerEmail: licEmail,
+        customerName: name || '',
+        amount: expectedValue,
+        currency: expectedCurrency,
+        purchaseDate: lic.purchaseDate
+          ? new Date(lic.purchaseDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+          : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+        licenseKey: lic.licenseKey,
+      };
+      let resendPdf = null;
+      try {
+        resendPdf = await generateInvoicePdfBuffer(resendInvoiceData);
+      } catch (e) {
+        error(`resend PDF error: ${e.message}`);
+      }
+      const resent = await sendLicenseEmailWithRetry(resendInvoiceData, lic.licenseKey, resendPdf, log, error);
+      if (resent) {
+        try {
+          await db.updateDocument(DB, LICENSES, userId, { emailSent: true });
+        } catch (e) {
+          error(`emailSent update failed: ${e.message}`);
+        }
+      }
       return res.json({
         ok: true,
         alreadyIssued: true,
-        email,
-        error: null,
+        licenseKey: lic.licenseKey,
+        email: licEmail,
+        emailed: resent,
+        error: resent ? null : 'License is issued but the confirmation email has not been delivered yet.',
       });
     }
   }
@@ -431,6 +517,9 @@ async function handle({ req, res, log, error }) {
   try {
     if (!alreadyProcessed) {
       try {
+        // Only the 6 columns the `payments` table actually defines — an
+        // extra field like invoiceNumber is rejected by Appwrite and would
+        // crash the whole verification after the charge already succeeded.
         await db.createDocument(DB, PAYMENTS, captureId, {
           userId,
           orderId,
@@ -438,7 +527,6 @@ async function handle({ req, res, log, error }) {
           amount: price,
           currency: paidCurrency,
           date: nowIso,
-          invoiceNumber,
         });
       } catch (e) {
         if (e?.code !== 409) throw e;
@@ -451,6 +539,11 @@ async function handle({ req, res, log, error }) {
       email,
       licenseKeyHash: hashLicenseKey(licenseKey),
       keyLast4: licenseKey.slice(-4),
+      // Stored encrypted-at-rest (server-only access via API key) so a later
+      // retry or "Resend Email" can actually re-send the real key instead of
+      // silently no-oping against an irreversible hash.
+      licenseKey,
+      emailSent: false,
       paymentId: captureId,
       purchaseDate: nowIso,
       pricePaid: price,
@@ -496,14 +589,26 @@ async function handle({ req, res, log, error }) {
     error(`PDF invoice generation error: ${e.message}`);
   }
 
-  const emailed = email ? await sendLicenseEmail(invoiceData, licenseKey, pdfBuffer, log, error) : false;
+  const emailed = email ? await sendLicenseEmailWithRetry(invoiceData, licenseKey, pdfBuffer, log, error) : false;
+  if (emailed) {
+    try {
+      await db.updateDocument(DB, LICENSES, userId, { emailSent: true });
+    } catch (e) {
+      error(`emailSent update failed: ${e.message}`);
+    }
+  }
 
   log(`license ISSUED for ${userId} (capture ${captureId}, invoice=${invoiceNumber}, emailed=${emailed})`);
+  // ok:true means "payment verified and license generated" — those steps are
+  // done and cannot be undone. emailed:true is the separate, final signal a
+  // caller (the website) must wait for before showing a success screen; when
+  // false it should retry (this endpoint is idempotent and will resend).
   return res.json({
     ok: true,
     licenseKey,
     email,
     emailed,
     invoiceNumber,
+    error: emailed ? null : 'License issued, but the confirmation email has not been delivered yet.',
   });
 }
