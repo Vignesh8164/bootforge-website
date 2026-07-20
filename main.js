@@ -502,12 +502,12 @@ function initPayPalCheckout() {
       submitBtn.disabled = true;
       setNavigationLock(true);
       switchView('processing');
-      updateProgress(15, 'Securing Appwrite Licensing Session...');
+      updateProgress(20, 'Securing Appwrite Licensing Session...');
 
       try {
         await ensureAppwriteSession();
 
-        updateProgress(35, 'Opening PayPal Checkout Gateway...');
+        updateProgress(40, 'Opening PayPal Checkout Gateway...');
         const webReturnUrl = window.location.origin + window.location.pathname;
         
         const exec = await appwriteFunctions.createExecution(
@@ -526,7 +526,7 @@ function initPayPalCheckout() {
           throw new Error(data.error || 'Could not start PayPal checkout session.');
         }
 
-        updateProgress(55, 'Awaiting PayPal Approval...', 'Complete Approval in PayPal', 'A pop-up window has been opened for PayPal login.');
+        updateProgress(60, 'Awaiting PayPal Approval...', 'Complete Approval in PayPal', 'A pop-up window has been opened for PayPal login.');
 
         let popup = null;
         try {
@@ -534,7 +534,7 @@ function initPayPalCheckout() {
         } catch(e) {}
 
         if (!popup || popup.closed || typeof popup.closed === 'undefined') {
-          // If popup is blocked by browser, redirect current window to approveUrl
+          // Fallback if popup is blocked by browser
           window.location.href = data.approveUrl;
           return;
         }
@@ -546,7 +546,7 @@ function initPayPalCheckout() {
         
         activePollInterval = setInterval(async () => {
           pollCount++;
-          if (isCompleted || pollCount > 120) { // 90 seconds timeout
+          if (isCompleted || pollCount > 150) { // 120 seconds max timeout
             clearInterval(activePollInterval);
             if (!isCompleted) {
               renderFailure('Payment verification timed out. If you completed payment, check your email or refresh.');
@@ -554,22 +554,24 @@ function initPayPalCheckout() {
             return;
           }
 
-          updateProgress(75, 'Verifying Payment & Minting License Key...');
+          // Check if payment was completed in PayPal
           const result = await verifyPaymentExecution(data.orderId);
 
           if (result && result.ok) {
             isCompleted = true;
             clearInterval(activePollInterval);
+            updateProgress(100, 'Payment Verified! Minting License Key...', 'Payment Verified!', 'Minting lifetime key and generating invoice...');
             try { if (popup && !popup.closed) popup.close(); } catch(e) {}
 
-            updateProgress(100, 'Complete! Loading receipt...');
-            if (result.alreadyIssued) {
-              renderAlreadyOwned(result, emailVal);
-            } else {
-              renderSuccessReceipt(result, emailVal);
-            }
+            setTimeout(() => {
+              if (result.alreadyIssued) {
+                renderAlreadyOwned(result, emailVal);
+              } else {
+                renderSuccessReceipt(result, emailVal);
+              }
+            }, 500);
           } else if (popup && popup.closed) {
-            // Check one final time immediately after user closes popup window
+            // Popup was closed by user — check one final time
             clearInterval(activePollInterval);
             const finalCheck = await verifyPaymentExecution(data.orderId);
             if (finalCheck && finalCheck.ok) {
@@ -579,7 +581,7 @@ function initPayPalCheckout() {
               renderFailure('PayPal checkout window was closed before completion. No charges were made.');
             }
           }
-        }, 800);
+        }, 1000);
 
       } catch (err) {
         submitBtn.disabled = false;
