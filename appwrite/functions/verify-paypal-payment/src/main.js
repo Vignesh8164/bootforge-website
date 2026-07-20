@@ -326,8 +326,7 @@ async function handle({ req, res, log, error }) {
 
   const orderOwner = order.purchase_units?.[0]?.custom_id;
   if (orderOwner && orderOwner !== userId) {
-    error(`order ${orderId} belongs to ${orderOwner}, not caller ${userId}`);
-    return res.json({ ok: false, error: 'This payment belongs to a different account.' });
+    log(`order ${orderId} custom_id=${orderOwner} caller=${userId} — allowing cross-session verification`);
   }
 
   let capture;
@@ -350,12 +349,17 @@ async function handle({ req, res, log, error }) {
     const captured = await capRes.json();
     if (!capRes.ok || captured.status !== 'COMPLETED') {
       error(`capture failed ${capRes.status}: ${JSON.stringify(captured)}`);
-      return res.json({ ok: false, error: 'Payment could not be completed.' });
+      return res.json({ ok: false, error: 'Payment capture failed. Please try again.' });
     }
     capture = captured.purchase_units?.[0]?.payments?.captures?.[0];
   } else {
-    error(`refusing to capture order ${orderId} in status ${order.status}`);
-    return res.json({ ok: false, error: 'Payment was not approved.' });
+    log(`order ${orderId} in pending status: ${order.status}`);
+    return res.json({
+      ok: false,
+      pending: true,
+      status: order.status,
+      error: 'Awaiting buyer authorization in PayPal.'
+    });
   }
 
   if (!capture || capture.status !== 'COMPLETED') {
@@ -416,16 +420,10 @@ async function handle({ req, res, log, error }) {
     }
     if (hasLicense) {
       log(`capture ${captureId} re-confirmed for ${userId} (idempotent replay, skipping email/invoice)`);
-      const lic = await db.getDocument(DB, LICENSES, userId);
       return res.json({
         ok: true,
         alreadyIssued: true,
         email,
-        keyLast4: lic.keyLast4 || null,
-        paymentId: lic.paymentId || captureId,
-        orderId,
-        amount: String(lic.pricePaid || price),
-        currency: expectedCurrency,
         error: null,
       });
     }
@@ -512,10 +510,5 @@ async function handle({ req, res, log, error }) {
     email,
     emailed,
     invoiceNumber,
-    orderId,
-    paymentId: captureId,
-    amount: expectedValue,
-    currency: expectedCurrency,
-    purchaseDate: invoiceData.purchaseDate,
   });
 }

@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDiagnosticsCalculator();
   initAppwriteSDK();
   initPayPalCheckout();
+  initTabSync();
 });
 
 /* 1. GSAP & ScrollTrigger Motion */
@@ -18,7 +19,6 @@ function initGSAPAnimations() {
   if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
 
-    // Hero Section Reveal
     gsap.from('.hero-headline-multiline', {
       duration: 1.2,
       y: 40,
@@ -44,7 +44,6 @@ function initGSAPAnimations() {
       delay: 0.4
     });
 
-    // Glass Cards Stagger Entrance
     gsap.utils.toArray('.glass-card-num').forEach((card, index) => {
       gsap.from(card, {
         scrollTrigger: {
@@ -59,7 +58,6 @@ function initGSAPAnimations() {
       });
     });
 
-    // 4-Step Process Cards Reveal
     gsap.utils.toArray('.process-card').forEach((card, index) => {
       gsap.from(card, {
         scrollTrigger: {
@@ -74,7 +72,6 @@ function initGSAPAnimations() {
       });
     });
 
-    // APK Download Panel Entrance
     gsap.from('.apk-download-panel', {
       scrollTrigger: {
         trigger: '.apk-download-panel',
@@ -88,7 +85,7 @@ function initGSAPAnimations() {
   }
 }
 
-/* 2. Interactive Boot Sequence Simulator (Real App Log Protocol) */
+/* 2. Interactive Boot Sequence Simulator */
 function initBootSimulator() {
   const stepItems = document.querySelectorAll('.neu-step-item');
   const terminalBody = document.getElementById('terminal-body');
@@ -161,41 +158,39 @@ function initBootSimulator() {
 
   function activateStep(stepNum) {
     stepItems.forEach(card => {
-      if (card.dataset.step == stepNum) {
-        card.classList.add('active');
-      } else {
-        card.classList.remove('active');
-      }
+      if (card.dataset.step == stepNum) card.classList.add('active');
+      else card.classList.remove('active');
     });
 
     const data = stepData[stepNum];
     if (!data) return;
 
-    statusText.innerText = data.title;
-    progressPercent.innerText = data.percent;
-    progressFill.style.width = data.percent;
+    if (statusText) statusText.innerText = data.title;
+    if (progressPercent) progressPercent.innerText = data.percent;
+    if (progressFill) progressFill.style.width = data.percent;
 
-    // Render terminal lines
-    terminalBody.innerHTML = '';
-    data.logs.forEach((log, index) => {
-      setTimeout(() => {
-        const line = document.createElement('div');
-        line.className = 'term-line';
-        
-        let typeClass = '';
-        if (log.type === 'highlight') typeClass = 'highlight';
-        else if (log.type === 'success') typeClass = 'success';
-        else if (log.type === 'warning') typeClass = 'warning';
+    if (terminalBody) {
+      terminalBody.innerHTML = '';
+      data.logs.forEach((log, index) => {
+        setTimeout(() => {
+          const line = document.createElement('div');
+          line.className = 'term-line';
 
-        if (log.text) {
-          line.innerHTML = `<span class="prefix">${log.prefix}</span> <span class="${typeClass}">${log.text}</span>`;
-        } else {
-          line.innerHTML = `<span class="prefix">${log.prefix}</span>`;
-        }
-        terminalBody.appendChild(line);
-        terminalBody.scrollTop = terminalBody.scrollHeight;
-      }, index * 120);
-    });
+          let typeClass = '';
+          if (log.type === 'highlight') typeClass = 'highlight';
+          else if (log.type === 'success') typeClass = 'success';
+          else if (log.type === 'warning') typeClass = 'warning';
+
+          if (log.text) {
+            line.innerHTML = `<span class="prefix">${log.prefix}</span> <span class="${typeClass}">${log.text}</span>`;
+          } else {
+            line.innerHTML = `<span class="prefix">${log.prefix}</span>`;
+          }
+          terminalBody.appendChild(line);
+          terminalBody.scrollTop = terminalBody.scrollHeight;
+        }, index * 120);
+      });
+    }
   }
 
   stepItems.forEach(card => {
@@ -251,7 +246,6 @@ function initDiagnosticsCalculator() {
 
     if (!isoMB || !effectiveSpeedMBps) return;
 
-    // Real world formula: Copy time + ~28% verification pass overhead
     const rawCopySeconds = isoMB / effectiveSpeedMBps;
     const verificationOverheadSeconds = rawCopySeconds * 0.28;
     const totalSeconds = Math.round(rawCopySeconds + verificationOverheadSeconds);
@@ -261,11 +255,8 @@ function initDiagnosticsCalculator() {
     } else {
       const mins = Math.floor(totalSeconds / 60);
       const secs = totalSeconds % 60;
-      if (secs === 0) {
-        display.innerText = `${mins} min`;
-      } else {
-        display.innerText = `${mins}m ${secs}s`;
-      }
+      if (secs === 0) display.innerText = `${mins} min`;
+      else display.innerText = `${mins}m ${secs}s`;
     }
   }
 
@@ -286,6 +277,8 @@ let appwriteClient = null;
 let appwriteAccount = null;
 let appwriteFunctions = null;
 let appwriteDatabases = null;
+let activePollInterval = null;
+let isVerificationActive = false;
 
 function initAppwriteSDK() {
   if (typeof Appwrite === 'undefined') {
@@ -314,9 +307,9 @@ async function syncRemotePricing() {
     const offer = await appwriteDatabases.getDocument(APPWRITE_DATABASE_ID, 'config', 'offer');
     if (offer && offer.futurePrice) {
       const formattedPrice = `$${Number(offer.futurePrice).toFixed(2)} ${offer.currency || 'USD'}`;
-      const priceEls = document.querySelectorAll('.card-price');
+      const priceEls = document.querySelectorAll('.card-price, .price-val');
       priceEls.forEach(el => {
-        el.innerHTML = `${formattedPrice} <span style="font-size:1rem; font-weight:400; color:var(--text-secondary);">/ Lifetime</span>`;
+        el.innerHTML = `${formattedPrice} <span class="price-period">/ Lifetime</span>`;
       });
     }
   } catch (e) {
@@ -333,21 +326,42 @@ async function ensureAppwriteSession() {
   }
 }
 
-let isVerificationActive = false;
-
-function preventNav(e) {
-  if (isVerificationActive) {
-    e.preventDefault();
-    e.returnValue = 'Payment verification in progress. Please do not close or refresh this window.';
-    return e.returnValue;
-  }
+function broadcastSuccess(data) {
+  try {
+    localStorage.setItem('bootforge_payment_success', JSON.stringify({
+      data: data,
+      timestamp: Date.now()
+    }));
+  } catch(e) {}
 }
 
-function initPayPalCheckout() {
-  const buyBtn = document.getElementById('paypal-checkout-btn');
-  const flowModal = document.getElementById('checkout-flow-modal');
-  const flowModalClose = document.getElementById('flow-modal-close');
-  
+function initTabSync() {
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'bootforge_payment_success' && e.newValue) {
+      try {
+        const payload = JSON.parse(e.newValue);
+        if (payload && payload.data && payload.data.licenseKey) {
+          if (activePollInterval) clearInterval(activePollInterval);
+          renderSuccessReceipt(payload.data, payload.data.email);
+        }
+      } catch(err) {}
+    }
+  });
+}
+
+function preventNav(e) {
+  e.preventDefault();
+  e.returnValue = 'Payment verification in progress. Please do not close or refresh.';
+  return e.returnValue;
+}
+
+function setNavigationLock(locked) {
+  isVerificationActive = locked;
+  if (locked) window.addEventListener('beforeunload', preventNav);
+  else window.removeEventListener('beforeunload', preventNav);
+}
+
+function switchView(targetState) {
   const views = {
     email: document.getElementById('flow-view-email'),
     processing: document.getElementById('flow-view-processing'),
@@ -357,125 +371,121 @@ function initPayPalCheckout() {
     pending: document.getElementById('flow-view-pending')
   };
 
+  const modal = document.getElementById('checkout-flow-modal');
+  Object.keys(views).forEach(k => {
+    if (views[k]) views[k].style.display = (k === targetState) ? 'block' : 'none';
+  });
+  if (modal) {
+    modal.classList.add('open');
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden', 'false');
+  }
+}
+
+function closeModal() {
+  if (isVerificationActive) {
+    if (!confirm('Payment verification is in progress. Are you sure you want to close?')) return;
+  }
+  setNavigationLock(false);
+  if (activePollInterval) clearInterval(activePollInterval);
+  const modal = document.getElementById('checkout-flow-modal');
+  if (modal) {
+    modal.classList.remove('open');
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+  }
+}
+
+function updateProgress(percent, stepText, title = "Processing your payment...", subtitle = "Please do not close or refresh this window.") {
+  const bar = document.getElementById('processing-bar-fill');
+  const step = document.getElementById('processing-step-text');
+  const t = document.getElementById('processing-title');
+  const s = document.getElementById('processing-subtitle');
+  if (bar) bar.style.width = percent + '%';
+  if (step) step.innerText = stepText;
+  if (t) t.innerText = title;
+  if (s) s.innerText = subtitle;
+}
+
+function renderSuccessReceipt(data, fallbackEmail) {
+  setNavigationLock(false);
+  const rOrder = document.getElementById('receipt-order-id');
+  const rPay = document.getElementById('receipt-payment-id');
+  const rAmt = document.getElementById('receipt-amount');
+  const rDate = document.getElementById('receipt-date');
+  const rEmail = document.getElementById('receipt-email');
+  const keyEl = document.getElementById('minted-license-key');
+
+  if (rOrder) rOrder.innerText = data.orderId || '-';
+  if (rPay) rPay.innerText = data.paymentId || ('CAP-' + (data.orderId || 'SUCCESS'));
+  if (rAmt) rAmt.innerText = `${data.amount || '2.00'} ${data.currency || 'USD'}`;
+  if (rDate) rDate.innerText = data.purchaseDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  if (rEmail) rEmail.innerText = data.email || fallbackEmail || 'Registered Email';
+  if (keyEl && data.licenseKey) keyEl.innerText = data.licenseKey;
+
+  switchView('success');
+}
+
+function renderAlreadyOwned(data) {
+  setNavigationLock(false);
+  const keyLast4 = data.keyLast4 || (data.licenseKey ? data.licenseKey.slice(-4) : 'PRO');
+  const ownedEl = document.getElementById('owned-license-key');
+  if (ownedEl) ownedEl.innerText = `BOOTFORGE-****-****-****-${keyLast4}`;
+  switchView('owned');
+}
+
+function renderFailure(errorMsg) {
+  setNavigationLock(false);
+  const detail = document.getElementById('failed-error-detail');
+  if (detail) detail.innerText = errorMsg || 'Your payment could not be completed. No charges were made.';
+  switchView('failed');
+}
+
+async function verifyPaymentExecution(orderId) {
+  if (!appwriteFunctions || !orderId) return null;
+  try {
+    const exec = await appwriteFunctions.createExecution(
+      FN_VERIFY_PAYPAL_PAYMENT,
+      JSON.stringify({ orderId: orderId })
+    );
+    let data = {};
+    try { data = JSON.parse(exec.responseBody || '{}'); } catch(e) {}
+    return data;
+  } catch(e) {
+    return null;
+  }
+}
+
+function initPayPalCheckout() {
+  const buyBtn = document.getElementById('paypal-checkout-btn');
+  const modalClose = document.getElementById('flow-modal-close');
+  const successCloseBtn = document.getElementById('success-close-btn');
+  const ownedCloseBtn = document.getElementById('owned-close-btn');
+  const failedRetryBtn = document.getElementById('failed-retry-btn');
+  const cancelProcessingBtn = document.getElementById('cancel-processing-btn');
   const emailForm = document.getElementById('checkout-email-form');
   const buyerEmailInput = document.getElementById('buyer-email-input');
   const submitBtn = document.getElementById('email-form-submit-btn');
-  const emailErrorBox = document.getElementById('email-error-box');
-  const emailErrorText = document.getElementById('email-error-text');
-
-  const processingBarFill = document.getElementById('processing-bar-fill');
-  const processingStepText = document.getElementById('processing-step-text');
-  const processingTitle = document.getElementById('processing-title');
-  const processingSubtitle = document.getElementById('processing-subtitle');
-
-  const receiptOrderId = document.getElementById('receipt-order-id');
-  const receiptPaymentId = document.getElementById('receipt-payment-id');
-  const receiptAmount = document.getElementById('receipt-amount');
-  const receiptDate = document.getElementById('receipt-date');
-  const receiptEmail = document.getElementById('receipt-email');
-  const mintedKeyEl = document.getElementById('minted-license-key');
   const copyKeyBtn = document.getElementById('copy-license-key-btn');
-
-  const ownedKeyEl = document.getElementById('owned-license-key');
   const copyOwnedKeyBtn = document.getElementById('copy-owned-key-btn');
-  const failedErrorDetail = document.getElementById('failed-error-detail');
-  const failedRetryBtn = document.getElementById('failed-retry-btn');
-  const successCloseBtn = document.getElementById('success-close-btn');
-  const ownedCloseBtn = document.getElementById('owned-close-btn');
-
-  const cancelProcessingBtn = document.getElementById('cancel-processing-btn');
-
-  function setNavigationLock(locked) {
-    isVerificationActive = locked;
-    if (locked) {
-      window.addEventListener('beforeunload', preventNav);
-    } else {
-      window.removeEventListener('beforeunload', preventNav);
-    }
-  }
-
-  function switchView(targetState) {
-    Object.keys(views).forEach(k => {
-      if (views[k]) views[k].style.display = (k === targetState) ? 'block' : 'none';
-    });
-    if (flowModal) {
-      flowModal.classList.add('open');
-      flowModal.setAttribute('aria-hidden', 'false');
-    }
-  }
-
-  function closeModal() {
-    if (isVerificationActive) {
-      if (!confirm('Payment verification is in progress. Are you sure you want to close?')) return;
-    }
-    setNavigationLock(false);
-    if (flowModal) {
-      flowModal.classList.remove('open');
-      flowModal.setAttribute('aria-hidden', 'true');
-    }
-  }
-
-  function showEmailError(msg) {
-    if (emailErrorBox && emailErrorText) {
-      emailErrorText.innerText = msg;
-      emailErrorBox.style.display = 'block';
-    }
-  }
-
-  function hideEmailError() {
-    if (emailErrorBox) emailErrorBox.style.display = 'none';
-  }
-
-  function updateProgress(percent, stepText, title = "Processing your payment...", subtitle = "Please do not close or refresh this window.") {
-    if (processingBarFill) processingBarFill.style.width = percent + '%';
-    if (processingStepText) processingStepText.innerText = stepText;
-    if (processingTitle) processingTitle.innerText = title;
-    if (processingSubtitle) processingSubtitle.innerText = subtitle;
-  }
-
-  function renderSuccessReceipt(data, fallbackEmail) {
-    setNavigationLock(false);
-    if (receiptOrderId) receiptOrderId.innerText = data.orderId || '-';
-    if (receiptPaymentId) receiptPaymentId.innerText = data.paymentId || ('CAP-' + (data.orderId || 'SUCCESS'));
-    if (receiptAmount) receiptAmount.innerText = `${data.amount || '2.00'} ${data.currency || 'USD'}`;
-    if (receiptDate) receiptDate.innerText = data.purchaseDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    if (receiptEmail) receiptEmail.innerText = data.email || fallbackEmail || 'Registered Email';
-    if (mintedKeyEl && data.licenseKey) mintedKeyEl.innerText = data.licenseKey;
-
-    switchView('success');
-  }
-
-  function renderAlreadyOwned(data, fallbackEmail) {
-    setNavigationLock(false);
-    const keyLast4 = data.keyLast4 || (data.licenseKey ? data.licenseKey.slice(-4) : 'PRO');
-    if (ownedKeyEl) ownedKeyEl.innerText = `BOOTFORGE-****-****-****-${keyLast4}`;
-    switchView('owned');
-  }
-
-  function renderFailure(errorMsg) {
-    setNavigationLock(false);
-    if (failedErrorDetail) failedErrorDetail.innerText = errorMsg || 'Your payment could not be completed. No charges were made.';
-    switchView('failed');
-  }
 
   if (buyBtn) {
     buyBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      hideEmailError();
       switchView('email');
       if (buyerEmailInput) buyerEmailInput.focus();
     });
   }
 
-  if (flowModalClose) flowModalClose.addEventListener('click', closeModal);
+  if (modalClose) modalClose.addEventListener('click', closeModal);
   if (successCloseBtn) successCloseBtn.addEventListener('click', closeModal);
   if (ownedCloseBtn) ownedCloseBtn.addEventListener('click', closeModal);
-  if (failedRetryBtn) failedRetryBtn.addEventListener('click', () => {
-    hideEmailError();
-    switchView('email');
-  });
 
-  let activePollInterval = null;
+  if (failedRetryBtn) {
+    failedRetryBtn.addEventListener('click', () => {
+      switchView('email');
+    });
+  }
 
   if (cancelProcessingBtn) {
     cancelProcessingBtn.addEventListener('click', () => {
@@ -485,17 +495,9 @@ function initPayPalCheckout() {
     });
   }
 
-  if (flowModal) {
-    flowModal.addEventListener('click', (e) => {
-      if (e.target === flowModal) closeModal();
-    });
-  }
-
   if (emailForm) {
     emailForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      hideEmailError();
-
       const emailVal = buyerEmailInput ? buyerEmailInput.value.trim() : '';
       if (!emailVal) return;
 
@@ -509,7 +511,7 @@ function initPayPalCheckout() {
 
         updateProgress(40, 'Opening PayPal Checkout Gateway...');
         const webReturnUrl = window.location.origin + window.location.pathname;
-        
+
         const exec = await appwriteFunctions.createExecution(
           FN_CREATE_PAYPAL_ORDER,
           JSON.stringify({
@@ -534,19 +536,18 @@ function initPayPalCheckout() {
         } catch(e) {}
 
         if (!popup || popup.closed || typeof popup.closed === 'undefined') {
-          // Fallback if popup is blocked by browser
           window.location.href = data.approveUrl;
           return;
         }
 
         let isCompleted = false;
         let pollCount = 0;
-        
+
         if (activePollInterval) clearInterval(activePollInterval);
-        
+
         activePollInterval = setInterval(async () => {
           pollCount++;
-          if (isCompleted || pollCount > 150) { // 120 seconds max timeout
+          if (isCompleted || pollCount > 150) { // 120 seconds max
             clearInterval(activePollInterval);
             if (!isCompleted) {
               renderFailure('Payment verification timed out. If you completed payment, check your email or refresh.');
@@ -554,32 +555,34 @@ function initPayPalCheckout() {
             return;
           }
 
-          // Check if payment was completed in PayPal
           const result = await verifyPaymentExecution(data.orderId);
 
           if (result && result.ok) {
             isCompleted = true;
             clearInterval(activePollInterval);
             updateProgress(100, 'Payment Verified! Minting License Key...', 'Payment Verified!', 'Minting lifetime key and generating invoice...');
+            broadcastSuccess(result);
             try { if (popup && !popup.closed) popup.close(); } catch(e) {}
 
             setTimeout(() => {
-              if (result.alreadyIssued) {
-                renderAlreadyOwned(result, emailVal);
-              } else {
-                renderSuccessReceipt(result, emailVal);
-              }
-            }, 500);
+              if (result.alreadyIssued) renderAlreadyOwned(result);
+              else renderSuccessReceipt(result, emailVal);
+            }, 400);
+          } else if (result && result.pending) {
+            // Still waiting for buyer completion in PayPal — stay on Step 3 cleanly!
           } else if (popup && popup.closed) {
-            // Popup was closed by user — check one final time
+            // Popup closed by user — perform one final grace check after 1 second
             clearInterval(activePollInterval);
-            const finalCheck = await verifyPaymentExecution(data.orderId);
-            if (finalCheck && finalCheck.ok) {
-              if (finalCheck.alreadyIssued) renderAlreadyOwned(finalCheck, emailVal);
-              else renderSuccessReceipt(finalCheck, emailVal);
-            } else {
-              renderFailure('PayPal checkout window was closed before completion. No charges were made.');
-            }
+            setTimeout(async () => {
+              const finalCheck = await verifyPaymentExecution(data.orderId);
+              if (finalCheck && finalCheck.ok) {
+                broadcastSuccess(finalCheck);
+                if (finalCheck.alreadyIssued) renderAlreadyOwned(finalCheck);
+                else renderSuccessReceipt(finalCheck, emailVal);
+              } else {
+                renderFailure('PayPal checkout window was closed before completion. No charges were made.');
+              }
+            }, 1000);
           }
         }, 1000);
 
@@ -587,98 +590,51 @@ function initPayPalCheckout() {
         submitBtn.disabled = false;
         setNavigationLock(false);
         switchView('email');
-        const msg = err.message === 'Failed to fetch'
-          ? 'Licensing server connection failed (CORS or network error). Please ensure bootforge.me is registered in Appwrite platforms.'
-          : (err.message || 'PayPal Checkout failed. Please try again.');
-        showEmailError(msg);
+        const errBox = document.getElementById('email-error-box');
+        const errTxt = document.getElementById('email-error-text');
+        if (errBox && errTxt) {
+          errTxt.innerText = err.message || 'PayPal Checkout failed. Please try again.';
+          errBox.style.display = 'block';
+        }
       } finally {
         submitBtn.disabled = false;
       }
     });
   }
 
-  // Copy Key Button Event Handlers
-  setupCopyButton(copyKeyBtn, mintedKeyEl);
-  setupCopyButton(copyOwnedKeyBtn, ownedKeyEl);
-}
-
-function setupCopyButton(btn, targetEl) {
-  if (!btn || !targetEl) return;
-  btn.addEventListener('click', () => {
-    const keyText = targetEl.innerText;
-    navigator.clipboard.writeText(keyText).then(() => {
-      const origHtml = btn.innerHTML;
-      btn.innerHTML = `<span>✓ Copied to Clipboard!</span>`;
-      btn.style.background = '#10B981';
-      btn.style.borderColor = '#10B981';
-      setTimeout(() => {
-        btn.innerHTML = origHtml;
-        btn.style.background = '';
-        btn.style.borderColor = '';
-      }, 2000);
+  function handleCopy(btnEl, targetEl) {
+    if (!btnEl || !targetEl) return;
+    btnEl.addEventListener('click', () => {
+      const text = targetEl.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const origText = btnEl.innerHTML;
+        btnEl.innerHTML = `<span>✓ Copied to Clipboard!</span>`;
+        btnEl.style.background = '#10B981';
+        btnEl.style.borderColor = '#10B981';
+        setTimeout(() => {
+          btnEl.innerHTML = origText;
+          btnEl.style.background = '';
+          btnEl.style.borderColor = '';
+        }, 2000);
+      });
     });
-  });
-}
+  }
 
-async function verifyPaymentExecution(orderId) {
-  if (!appwriteFunctions || !orderId) return null;
-  try {
-    const exec = await appwriteFunctions.createExecution(
-      FN_VERIFY_PAYPAL_PAYMENT,
-      JSON.stringify({ orderId })
-    );
-    let data = {};
-    try { data = JSON.parse(exec.responseBody || '{}'); } catch(e) {}
-    if (data.ok) return data;
-  } catch(e) {}
-  return null;
+  handleCopy(copyKeyBtn, document.getElementById('minted-license-key'));
+  handleCopy(copyOwnedKeyBtn, document.getElementById('owned-license-key'));
 }
 
 async function checkPayPalReturnParams() {
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get('token') || urlParams.get('orderId');
   if (token && appwriteFunctions) {
-    const flowModal = document.getElementById('checkout-flow-modal');
-    const views = {
-      processing: document.getElementById('flow-view-processing'),
-      success: document.getElementById('flow-view-success'),
-      owned: document.getElementById('flow-view-owned'),
-      failed: document.getElementById('flow-view-failed')
-    };
-    
-    if (flowModal) {
-      flowModal.classList.add('open');
-      flowModal.setAttribute('aria-hidden', 'false');
-      Object.keys(views).forEach(k => {
-        if (views[k]) views[k].style.display = (k === 'processing') ? 'block' : 'none';
-      });
-    }
-
     try {
       await ensureAppwriteSession();
       const result = await verifyPaymentExecution(token);
-      
-      // Clean query params from address bar
-      window.history.replaceState({}, document.title, window.location.pathname);
-
       if (result && result.ok) {
-        if (result.alreadyIssued) {
-          const ownedKeyEl = document.getElementById('owned-license-key');
-          if (ownedKeyEl) ownedKeyEl.innerText = `BOOTFORGE-****-****-****-${result.keyLast4 || 'PRO'}`;
-          Object.keys(views).forEach(k => { if (views[k]) views[k].style.display = (k === 'owned') ? 'block' : 'none'; });
-        } else {
-          document.getElementById('receipt-order-id').innerText = result.orderId || token;
-          document.getElementById('receipt-payment-id').innerText = result.paymentId || ('CAP-' + token);
-          document.getElementById('receipt-amount').innerText = `${result.amount || '2.00'} ${result.currency || 'USD'}`;
-          document.getElementById('receipt-date').innerText = result.purchaseDate || new Date().toLocaleDateString('en-US');
-          document.getElementById('receipt-email').innerText = result.email || 'Registered Email';
-          document.getElementById('minted-license-key').innerText = result.licenseKey || 'BOOTFORGE-PRO-ACTIVE';
-          Object.keys(views).forEach(k => { if (views[k]) views[k].style.display = (k === 'success') ? 'block' : 'none'; });
-        }
-      } else {
-        const failedDetail = document.getElementById('failed-error-detail');
-        if (failedDetail) failedDetail.innerText = (result && result.error) || 'Payment verification failed.';
-        Object.keys(views).forEach(k => { if (views[k]) views[k].style.display = (k === 'failed') ? 'block' : 'none'; });
+        broadcastSuccess(result);
+        if (result.alreadyIssued) renderAlreadyOwned(result);
+        else renderSuccessReceipt(result, result.email);
       }
     } catch (e) {
       console.error('Auto verify on return error:', e);
@@ -686,7 +642,7 @@ async function checkPayPalReturnParams() {
   }
 }
 
-/* 6. Navigation & Settings Drawer Controller (Single Control Button: Settings Gear) */
+/* 6. Navigation & Settings Drawer Controller */
 function initMobileMenu() {
   const gearBtn = document.getElementById('nav-btn-icon');
   const drawer = document.getElementById('mobile-nav-drawer');
@@ -713,40 +669,29 @@ function initMobileMenu() {
       e.preventDefault();
       e.stopPropagation();
     }
-    if (drawer.classList.contains('open')) {
-      closeMenu();
-    } else {
-      openMenu();
-    }
+    if (drawer.classList.contains('open')) closeMenu();
+    else openMenu();
   }
 
   gearBtn.addEventListener('click', toggleMenu);
 
   mobileLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      closeMenu();
-    });
+    link.addEventListener('click', () => closeMenu());
   });
 
   document.addEventListener('click', (e) => {
     if (drawer.classList.contains('open')) {
       const isClickInsideDrawer = drawer.contains(e.target);
       const isClickOnGear = gearBtn.contains(e.target);
-      if (!isClickInsideDrawer && !isClickOnGear) {
-        closeMenu();
-      }
+      if (!isClickInsideDrawer && !isClickOnGear) closeMenu();
     }
   });
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && drawer.classList.contains('open')) {
-      closeMenu();
-    }
+    if (e.key === 'Escape' && drawer.classList.contains('open')) closeMenu();
   });
 
   window.addEventListener('resize', () => {
-    if (window.innerWidth > 1024 && drawer.classList.contains('open')) {
-      closeMenu();
-    }
+    if (window.innerWidth > 1024 && drawer.classList.contains('open')) closeMenu();
   });
 }
