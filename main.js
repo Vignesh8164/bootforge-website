@@ -440,14 +440,28 @@ function initPayPalCheckout() {
           return;
         }
 
+        let isCompleted = false;
         let pollCount = 0;
         const pollInterval = setInterval(async () => {
           pollCount++;
-          if (popup.closed || pollCount > 120) {
+          if (isCompleted || pollCount > 100) {
+            clearInterval(pollInterval);
+            return;
+          }
+
+          // Active payment verification check
+          const verifiedKey = await checkPaymentStatus(data.orderId);
+          if (verifiedKey) {
+            isCompleted = true;
+            clearInterval(pollInterval);
+            try { if (popup && !popup.closed) popup.close(); } catch(e) {}
+            openSuccessModal(verifiedKey);
+          } else if (popup.closed) {
+            // Popup closed by user, do final verification attempt
             clearInterval(pollInterval);
             await verifyAndDeliverLicense(data.orderId, openSuccessModal);
           }
-        }, 2500);
+        }, 2000);
 
       } catch (err) {
         submitBtn.disabled = false;
@@ -476,6 +490,22 @@ function initPayPalCheckout() {
       });
     });
   }
+}
+
+async function checkPaymentStatus(orderId) {
+  if (!appwriteFunctions || !orderId) return null;
+  try {
+    const exec = await appwriteFunctions.createExecution(
+      FN_VERIFY_PAYPAL_PAYMENT,
+      JSON.stringify({ orderId: orderId })
+    );
+    let data = {};
+    try { data = JSON.parse(exec.responseBody || '{}'); } catch(e) {}
+    if (data.ok && (data.licenseKey || data.alreadyIssued)) {
+      return data.licenseKey || 'BOOTFORGE-PRO-ACTIVE';
+    }
+  } catch(e) {}
+  return null;
 }
 
 async function verifyAndDeliverLicense(orderId, successCallback) {
