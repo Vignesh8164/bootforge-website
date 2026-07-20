@@ -416,10 +416,16 @@ async function handle({ req, res, log, error }) {
     }
     if (hasLicense) {
       log(`capture ${captureId} re-confirmed for ${userId} (idempotent replay, skipping email/invoice)`);
+      const lic = await db.getDocument(DB, LICENSES, userId);
       return res.json({
         ok: true,
         alreadyIssued: true,
         email,
+        keyLast4: lic.keyLast4 || null,
+        paymentId: lic.paymentId || captureId,
+        orderId,
+        amount: String(lic.pricePaid || price),
+        currency: expectedCurrency,
         error: null,
       });
     }
@@ -506,5 +512,10 @@ async function handle({ req, res, log, error }) {
     email,
     emailed,
     invoiceNumber,
+    orderId,
+    paymentId: captureId,
+    amount: expectedValue,
+    currency: expectedCurrency,
+    purchaseDate: invoiceData.purchaseDate,
   });
 }

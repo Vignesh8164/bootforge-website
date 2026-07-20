@@ -1603,3 +1603,226 @@ footer {
   color: #FF6B6B;
   line-height: 1.4;
 }
+
+/* Extended Payment Flow Component System */
+.payment-flow-card {
+  max-width: 520px;
+  padding: 2.25rem 2rem;
+}
+
+.flow-view-state {
+  animation: fadeInState 0.3s ease forwards;
+}
+
+@keyframes fadeInState {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.secure-badge-foot {
+  display: block;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 1rem;
+}
+
+/* Spinner & Pulse Rings */
+.processing-spinner-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.spinner-pulse-ring {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(227, 38, 54, 0.2);
+  border-top-color: var(--red-signal);
+  border-radius: 50%;
+  animation: spinRing 0.8s linear infinite, pulseGlow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes spinRing {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulseGlow {
+  from { box-shadow: 0 0 10px rgba(227, 38, 54, 0.2); }
+  to { box-shadow: 0 0 25px rgba(227, 38, 54, 0.6); }
+}
+
+/* Step Progress Tracker */
+.step-progress-tracker {
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.progress-bar-bg {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--red-vibrant), var(--red-signal));
+  border-radius: 4px;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 12px var(--red-signal);
+}
+
+.step-status-text {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  text-align: center;
+  display: block;
+}
+
+.processing-notice-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 1rem;
+}
+
+/* Transaction Summary Receipt Card */
+.txn-summary-card {
+  background: #0D0D10;
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.txn-summary-header {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--red-signal);
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.2rem;
+}
+
+.txn-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.txn-label {
+  color: var(--text-secondary);
+}
+
+.txn-val {
+  color: #FFFFFF;
+  word-break: break-all;
+  text-align: right;
+}
+
+.txn-val.font-bold { font-weight: 600; }
+.txn-val.font-mono { font-family: var(--font-mono); font-size: 0.8rem; }
+.txn-val.text-green { color: #10B981; }
+
+.email-sent-notice {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 0.82rem;
+  color: #10B981;
+  margin-bottom: 1.25rem;
+  line-height: 1.4;
+}
+
+/* Status Icon Rings */
+.owned-icon-ring {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.15);
+  border: 2px solid #3B82F6;
+  font-size: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem auto;
+  box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
+}
+
+.failed-icon-ring {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(227, 38, 54, 0.15);
+  border: 2px solid var(--red-signal);
+  font-size: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem auto;
+  box-shadow: 0 0 25px rgba(227, 38, 54, 0.4);
+}
+
+.pending-icon-ring {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(245, 158, 11, 0.15);
+  border: 2px solid #F59E0B;
+  font-size: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem auto;
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.4);
+}
+
+/* Action CTA Group */
+.modal-cta-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.neu-pill-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.neu-pill-btn-outline:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #FFF;
+  color: #FFF;
+}
+
