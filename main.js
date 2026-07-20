@@ -444,12 +444,12 @@ function initPayPalCheckout() {
         let pollCount = 0;
         const pollInterval = setInterval(async () => {
           pollCount++;
-          if (isCompleted || pollCount > 100) {
+          if (isCompleted || pollCount > 300) {
             clearInterval(pollInterval);
             return;
           }
 
-          // Active payment verification check
+          // Rapid payment verification check (600ms)
           const verifiedKey = await checkPaymentStatus(data.orderId);
           if (verifiedKey) {
             isCompleted = true;
@@ -457,11 +457,10 @@ function initPayPalCheckout() {
             try { if (popup && !popup.closed) popup.close(); } catch(e) {}
             openSuccessModal(verifiedKey);
           } else if (popup.closed) {
-            // Popup closed by user, do final verification attempt
             clearInterval(pollInterval);
             await verifyAndDeliverLicense(data.orderId, openSuccessModal);
           }
-        }, 2000);
+        }, 600);
 
       } catch (err) {
         submitBtn.disabled = false;
